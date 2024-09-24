@@ -5,6 +5,7 @@
 
 <div class="users-section">
 	<Header />
+	<hr class="line-separator" />
 	 <slot/>
 	<Footer />
 </div>
@@ -21,4 +22,11 @@
 	}
 
 	
+	.line-separator {
+		border-width: 1px;
+		border-color: #9ef8bb;
+		width: 100%;
+		position: relative;
+		top: -8px;
+	}
 </style>
