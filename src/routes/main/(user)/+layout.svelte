@@ -1,16 +1,16 @@
 <script>
-	import Footer from '$lib/footer.svelte';
-	import Header from '$lib/header.svelte';
+	import Footer from '$lib/Footer/footer.svelte';
+	import Header from '$lib/Header/header.svelte';
 </script>
 
-<div class="home-page">
+<div class="users-section">
 	<Header />
 	 <slot/>
 	<Footer />
 </div>
 
 <style>
-	.home-page {
+	.users-section {
 		width: 100%;
 		height: 100%;
 		display: flex;

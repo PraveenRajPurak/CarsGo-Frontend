@@ -1,7 +1,9 @@
 <footer class="footer-main">
+	<hr class="line-separator" />
+
 	<div class="footer">
 		<div class="image_in_footer">
-			<img src="src/lib/images/footer_img.png" alt="Logo" style="width: auto; height: 100px;" />
+			<img src="/footer_img.png" alt="Logo" style="width: auto; height: 100px;" />
 		</div>
 
 		<nav class="quick_links_in_footer">
@@ -35,14 +37,14 @@
 			</p>
 			<div class="mini-contact-icon-body">
 				<div class="mini-contact-icon">
-					<img src="src/lib/images/mail.png" alt="Email" style="height:23.5px" />
+					<img src="/mail.png" alt="Email" style="height:23.5px" />
 				</div>
 				<div class="mini-contact-text">
 					<p class="link_item" style="left:20px;">support@carsgo.com</p>
 				</div>
 			</div>
 			<div class="mini-contact-icon-body">
-				<img src="src/lib/images/phone.png" alt="Phone" style="height:40px" />
+				<img src="/phone.png" alt="Phone" style="height:40px" />
 				<p class="link_item" style="left:10px">+91-1234567890</p>
 			</div>
 		</div>
@@ -62,6 +64,7 @@
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
+		margin-top: 20px;
 	}
 	.footer {
 		width: 100%;
@@ -108,7 +111,6 @@
 		margin-bottom: 15px;
 		padding: 0;
 		list-style: none;
-		display: inline-block;
 		font-size: 16px;
 		font-weight: 200;
 		font-family: 'montserrat', sans-serif;
@@ -159,5 +161,13 @@
 		left: 20px;
 		position: relative;
 		left: 13px;
+	}
+
+	.line-separator {
+		border-width: 1px;
+		border-color: #9ef8bb;
+		width: 100%;
+		position: relative;
+		top: -60px;
 	}
 </style>

@@ -1,6 +1,6 @@
 <script>
-	import Footer from '$lib/footer.svelte';
-	import Header from '$lib/header.svelte';
+	import Footer from '$lib/Footer/footer.svelte';
+	import Header from '$lib/Header/header.svelte';
 </script>
 
 <div class="home-page">
@@ -21,13 +21,13 @@
 			</button>
 		</div>
 		<div class="right-upper-body">
-			<img src="src/lib/images/car6.png" alt="Car" style="height: 530px;" />
+			<img src="/car6.png" alt="Car" style="height: 530px;" />
 		</div>
 	</div>
 
 	<div class="brands">
-		<h2 class="left-upper-body-heading">Brands We Offer</h2>
-		<img src="src/lib/images/brands.png" alt="Brand" style="height: 400px;" />
+		<h2 class="left-upper-body-heading" style="margin-bottom:15px;">Brands We Offer</h2>
+		<img src="/brands.png" alt="Brand" style="height: 400px;" />
 	</div>
 	<Footer />
 </div>

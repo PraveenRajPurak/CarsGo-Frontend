@@ -1,6 +1,6 @@
 <header class ="header">
     <div class="image_in_header">
-        <img src="src/lib/images/logo.png" alt="Logo" style = "width: auto; height: 50px;">
+        <img src="/logo.png" alt="Logo" style = "width: auto; height: 50px;">
     </div>
 
     <nav class="menu_in_header">
@@ -21,11 +21,11 @@
     
     <div class="icons_in_header">
         <div class="icon-text-body" style="margin-right: 35px;">
-            <img src="src/lib/images/cart.png" alt="Cart" style="height:40px" />
+            <img src="/cart.png" alt="Cart" style="height:40px" />
             <p class="icon-text" style="left:10px">Your Cart</p>
         </div>
         <div class="icon-text-body">
-            <img src="src/lib/images/profile.png" alt="Cart" style="height:37px" />
+            <img src="/profile.png" alt="Cart" style="height:37px" />
             <p class="icon-text" style="left:10px">Your Profile</p>
         </div>
     </div>
