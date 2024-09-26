@@ -1,5 +1,6 @@
 <script>
     import { goto } from "$app/navigation";
+    import {isLoggedIn, register_login_popup} from '../../stores/user.js'
 </script>
 <header class ="header">
     <div class="image_in_header">
@@ -27,9 +28,11 @@
             <img src="/cart.png" alt="Cart" style="height:40px" />
             <p class="icon-text" style="left:10px">Your Cart</p>
         </div>
-        <div on:click={() => {goto ('/main/dashboard')}} class="icon-text-body">
+        <div on:click={() => 
+        {$isLoggedIn ? goto ('/main/dashboard') : $register_login_popup = true}}
+        class="icon-text-body">
             <img src="/profile.png" alt="Cart" style="height:37px" />
-            <p class="icon-text" style="left:10px">Your Profile</p>
+            <p class="icon-text" style="left:10px">{$isLoggedIn ? ' Your Profile' : 'Register/Login'}</p>
         </div>
     </div>
     
