@@ -1,6 +1,7 @@
 <script>
 	import Footer from '$lib/Footer/footer.svelte';
 	import Header from '$lib/Header/header.svelte';
+	import {goto} from '$app/navigation';
 </script>
 
 <div class="home-page">
@@ -16,8 +17,8 @@
 			<p class="left-upper-body-text" style="margin-top: -10px; position: relative; left:40px">
 				Explore our wide range of premium vehicles, tailored to meet your needs.
 			</p>
-			<button class="pushable" style = "margin-left: 70px; margin-top: 10px">
-				<span class="front"> Push me </span>
+			<button on:click={() => {goto ('/main/products') }} class="pushable" style = "margin-left: 70px; margin-top: 10px">
+				<span class="front"> Shop Now </span>
 			</button>
 		</div>
 		<div class="right-upper-body">

@@ -1,3 +1,6 @@
+<script>
+    import { goto } from "$app/navigation";
+</script>
 <header class ="header">
     <div class="image_in_header">
         <img src="/logo.png" alt="Logo" style = "width: auto; height: 50px;">
@@ -20,11 +23,11 @@
     </nav>
     
     <div class="icons_in_header">
-        <div class="icon-text-body" style="margin-right: 35px;">
+        <div on:click={() => {goto ('/main/cart')}} class="icon-text-body" style="margin-right: 35px;">
             <img src="/cart.png" alt="Cart" style="height:40px" />
             <p class="icon-text" style="left:10px">Your Cart</p>
         </div>
-        <div class="icon-text-body">
+        <div on:click={() => {goto ('/main/dashboard')}} class="icon-text-body">
             <img src="/profile.png" alt="Cart" style="height:37px" />
             <p class="icon-text" style="left:10px">Your Profile</p>
         </div>

@@ -1,5 +1,5 @@
-<script>
-    import 
+<script> 
+	import { goto } from '$app/navigation';
 	let cartitems = [
 		{
 			id: 1,
@@ -7,7 +7,12 @@
 			category: 'Hatchback',
 			price: 'Rs.600000',
 			img_url: '/car4.png',
-			quantity: 1
+			quantity: 1,
+			get subtotal() {
+				let price = (this.price).substring(3);
+				let quantity = this.quantity;
+				return price*quantity
+			}
 		},
 		{
 			id: 2,
@@ -15,7 +20,12 @@
 			category: 'Hatchback',
 			price: 'Rs.600000',
 			img_url: '/car4.png',
-			quantity: 2
+			quantity: 2,
+			get subtotal() {
+				let price = (this.price).substring(3);
+				let quantity = this.quantity;
+				return price*quantity
+			}
 		}
 	];
 
@@ -25,7 +35,9 @@
     $: {
         sum = 0;
         for (let i = 0; i < cartitems.length; i++) {
-            sum += cartitems[i].price * cartitems[i].quantity;
+			let item_price = parseInt((cartitems[i].price).substring(3));
+			let item_quantity = cartitems[i].quantity;
+            sum += item_price * item_quantity;
         }
     }
 </script>
@@ -56,22 +68,19 @@
                     </div>
     
                     <div class="single-item">
-                        <p class="single-item-text">{item.price * item.quantity}</p>
+                        <p class="single-item-text">{"Rs."+ item.subtotal}</p>
                     </div>
                 </div>
 			{/each}
 		</div>
 	</div>
 
-	<div class="total">
-		<p class="total-text">Total</p>
-		<p class="total-price">{sum}</p>
-	</div>
-
     <div class="Total-cart">
-        <h1 class="cart-heading">Total</h1>
-        <h1>{sum}</h1>
-        <button class="checkout" on:click={() => {goto ('/main/checkout') }}>Checkout</button>
+		<div class= "total-price-holder">
+			<h1 class="cart-heading">Total</h1>
+			<h1 class="total-price">{sum}</h1>
+		</div>
+        <button class="checkout-btn" on:click={() => {goto ('/main/checkout') }}>Checkout</button>
     </div>
 </div>
 
@@ -196,4 +205,49 @@
         font-family: 'montserrat', sans-serif;
         color: white;
     }
+
+	.Total-cart {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		width: 900px;
+		justify-content: right;
+		align-items: right;
+		justify-items: right;
+		text-align: right;
+	}
+
+	.total-price-holder {
+		display: flex;
+		flex-direction:row;
+		flex: 1;
+		width: 400px;
+		justify-content: right;
+		align-items: right;
+		justify-items: right;
+		text-align: right;
+		margin-bottom: 20px;
+		position : relative;
+		left: 400px;
+		top: 20px;
+	}
+
+	.total-price {
+		margin-left: 20px;
+		font-size: 30px;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		color: white;
+	}
+
+	.checkout-btn {
+		background-color: #002b1b;
+		color: white;
+		font-size: 20px;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		border-radius: 5px;
+		padding: 10px;
+		margin: 20px;
+	}
 </style>

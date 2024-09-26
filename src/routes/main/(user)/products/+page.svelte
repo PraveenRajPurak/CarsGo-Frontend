@@ -1,4 +1,5 @@
 <script>
+	import {goto} from '$app/navigation';
 	let categories = [
 		{
 			id: 1,
@@ -67,7 +68,7 @@
 	<h1 class="product-heading" style="margin-top:30px;">Our Products</h1>
 	<div class="products">
 		{#each products as product}
-			<div class="product">
+			<div on:click={() => {goto ('/main/products/' + product.id) }} class="product">
 				<img src={product.img_url} alt="product" style="width: 200px; height: 200px;" />
 				<p class="product-name">{product.name}</p>
 				<p class="product-category">{product.category}</p>
@@ -141,6 +142,7 @@
 		margin-bottom: 20px;
 		border-color: #002b1b;
 		border-width: 2px;
+		cursor: pointer;
 	}
 
 	.product-name {
