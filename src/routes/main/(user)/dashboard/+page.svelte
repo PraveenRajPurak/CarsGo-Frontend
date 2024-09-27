@@ -1,5 +1,5 @@
 <script>
-	let isLoggedin = false;
+    import {isLoggedIn} from '../../../stores/user.js'
 	let registration_toggler = false;
 
 	let user = {
@@ -9,7 +9,7 @@
 </script>
 
 <div class="dashboard">
-	{#if isLoggedin}
+	{#if isLoggedIn}
 		<div class="dashboard-logged-in-user">
 			<h2 class="dashboard-logged-in-user-text">Welcome {user.name}!</h2>
 			<h2 class="dashboard-logged-in-user-text">
@@ -17,14 +17,14 @@
 				<p style="cursor: pointer; font-weight: 400px; color: #0aac71;"
 					on:click={() => {
 						registration_toggler = true;
-						isLoggedin = false;
+						$isLoggedin = false;
 					}}
 				>
 					Logout
 				</p>
 			</h2>
 		</div>
-	{:else if !isLoggedin}
+	{:else if !isLoggedIn}
 		<div class="btn-containers">
 			<button on:click={() => {registration_toggler = true}} class="dashboard-register-btn">Register</button>
 			<button on:click={() => {registration_toggler = false}} class="dashboard-register-btn">Login</button>
