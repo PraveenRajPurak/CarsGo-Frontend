@@ -13,7 +13,7 @@
 		ButtonGroup,
 		GradientButton
 	} from 'flowbite-svelte';
-	import { register_login_popup } from './main/(user)/stores/user.js';
+	import { register_login_popup } from '../stores/user.js';
 	let registration_toggler = false;
 	let loggedinsucces = false;
 	let loginmessage = '';

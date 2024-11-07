@@ -4,7 +4,7 @@
 </script>
 <header class ="header">
     <div class="image_in_header">
-        <img src="/logo.png" alt="Logo" style = "width: auto; height: 50px;">
+        <img on:click={() => {goto ('/')}} src="/logo.png" alt="Logo" style = "width: auto; height: 50px; cursor: pointer">
     </div>
 
     <nav class="menu_in_header">

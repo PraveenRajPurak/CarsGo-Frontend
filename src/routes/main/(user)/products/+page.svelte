@@ -48,13 +48,17 @@
 			price: 'Rs.7,00,000'
 		}
 	];
+
+	function handlecategoryClick(category) {
+		const products = fetch(`http://localhost:10010/api/products/category/${category.name}`)
+	}
 </script>
 
 <div class="product-list">
 	<h1 class="product-heading">Our Categories</h1>
 	<div class="categories">
 		{#each categories as category}
-			<div class="category">
+			<div class="category" on:click={() => {handlecategoryClick(category)}}>
 				<img
 					src={category.img_url}
 					alt="category"
