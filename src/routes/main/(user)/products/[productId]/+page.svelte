@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { cart, addToCart } from '../../../../../stores/cart.js';
+	import { products_store } from '../../../../../stores/products.js';
 
 	const { productId } = $page.params;
 
@@ -9,9 +10,20 @@
 
 	console.log('Cart : ', $cart);
 
+	let products_from_store = [];
+
+	$: if ($products_store.length > 0) {
+		products_from_store = $products_store;
+		console.log('Products from store:', products_from_store);
+	}
+
+	//console.log('Products from store : ', products_from_store);
+
+	//console.log('Products , actual : ', $products_store);
+
 	let index_in_cart = -1;
 
-	$: $cart, index_in_cart = $cart.findIndex((p) => p.id == productId);
+	$: $cart, (index_in_cart = $cart.findIndex((p) => p.id == productId));
 
 	console.log('Index in cart : ', index_in_cart);
 
@@ -56,7 +68,9 @@
 		}
 	];
 
-	let index = products.findIndex((p) => p.id == productId);
+	let index = $products_store.findIndex((p) => p._id == productId );
+
+	console.log('Index of the item : ', index);
 
 	let product = {
 		id: 1,
@@ -93,22 +107,21 @@
 	];
 
 	function add_To_Cart() {
-
 		let cartitem = {
-			id: products[index].id,
-			name: products[index].name,
-			category: products[index].category,
-			price: products[index].price,
-			img_url: products[index].img_url,
+			id: $products_store[index]._id,
+			name: $products_store[index].name,
+			category: $products_store[index].category,
+			price: $products_store[index].saleprice,
+			img_url: $products_store[index].images[0],
 			quantity: quantity,
 			get subtotal() {
-				let price = (this.price).substring(3);
+				let price = this.price;
 				let quantity = this.quantity;
-				return price*quantity
+				return price * quantity;
 			}
 		};
 
-		addToCart(cartitem);		
+		addToCart(cartitem);
 
 		alert('Product added to cart');
 	}
@@ -116,33 +129,43 @@
 
 <div class="product-page">
 	<div class="product-route">
-		<p class="product-route-text">carsgo.com/home/products/{products[index].id}</p>
+		<p class="product-route-text">carsgo.com/home/products/{products_from_store[index].name}</p>
 	</div>
 	<div class="product-card">
 		<div class="product-image">
-			<img src={products[index].img_url} alt="Product" style="height: 450px; width: 450px" />
+			<img
+				src={products_from_store[index].images[0]}
+				alt="Product"
+				style="height: 450px; width: 450px"
+			/>
 		</div>
 		<div class="product-info">
-			<h1 class="product-name">{products[index].name}</h1>
-			<p class="product-category">{products[index].category}</p>
-			<p class="product-price">{products[index].price}</p>
+			<h1 class="product-name">{products_from_store[index].name}</h1>
+			<p class="product-category">{products_from_store[index].category}</p>
+			<p class="product-price">Rs. {products_from_store[index].saleprice}</p>
 			{#if index_in_cart == -1}
-			{console.log('Product does not exist in cart')}
-			{console.log($cart)}
-			<div class="add-to-cart-parent">
-				<input class = "add-to-cart-quantity" type="number" bind:value={quantity} min="1" max="10" />
-				<button class="add-to-cart" on:click={add_To_Cart}>Add to Cart</button>
-			</div>
+				{console.log('Product does not exist in cart')}
+				{console.log($cart)}
+				<div class="add-to-cart-parent">
+					<input
+						class="add-to-cart-quantity"
+						type="number"
+						bind:value={quantity}
+						min="1"
+						max="10"
+					/>
+					<button class="add-to-cart" on:click={add_To_Cart}>Add to Cart</button>
+				</div>
 			{:else}
-			<div class="add-to-cart-parent">
-				<button on:click={ () => goto('/main/cart')} class="go-to-cart" >Go to Cart</button>
-			</div>
+				<div class="add-to-cart-parent">
+					<button on:click={() => goto('/main/cart')} class="go-to-cart">Go to Cart</button>
+				</div>
 			{/if}
 		</div>
 	</div>
 	<div class="product-description">
 		<p class="description-heading">Product Description</p>
-		<p class="description-text">{products[index].description}</p>
+		<p class="description-text">{products_from_store[index].description}</p>
 	</div>
 	<h1 class="product-heading">Featured Products</h1>
 	<div class="featured-products">
@@ -241,7 +264,7 @@
 
 	.add-to-cart {
 		background-color: #002b1b;
-        width: 50%;
+		width: 50%;
 		color: white;
 		font-size: 20px;
 		font-weight: 500;
@@ -252,28 +275,28 @@
 		margin: 20px;
 	}
 
-    .add-to-cart-parent {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        justify-items: center;
-        margin-bottom: 10px;
-    }
+	.add-to-cart-parent {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		justify-items: center;
+		margin-bottom: 10px;
+	}
 
-    .add-to-cart-quantity {
-        background-color: #002b1b;
-        width: 60px;
-        color: white;
-        font-size: 20px;
-        font-weight: 500;
-        font-family: 'montserrat', sans-serif;
-        border-radius: 5px;
-        padding: 10px;
-        margin-top: 10px;
-        margin: 20px;
-    }
+	.add-to-cart-quantity {
+		background-color: #002b1b;
+		width: 60px;
+		color: white;
+		font-size: 20px;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		border-radius: 5px;
+		padding: 10px;
+		margin-top: 10px;
+		margin: 20px;
+	}
 
 	.go-to-cart {
 		background-color: #002b1b;

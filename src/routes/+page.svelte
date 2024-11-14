@@ -2,8 +2,14 @@
 	import Footer from '$lib/Footer/footer.svelte';
 	import Header from '$lib/Header/header.svelte';
 	import { goto } from '$app/navigation';
-	import { isLoggedIn} from '../stores/user'
-	
+	import {
+		isLoggedIn,
+		user_Data,
+		updateUserData,
+		user_Extended_Data,
+		updateExtendedUserData
+	} from '../stores/user';
+
 	import {
 		Button,
 		Modal,
@@ -14,9 +20,105 @@
 		GradientButton
 	} from 'flowbite-svelte';
 	import { register_login_popup } from '../stores/user.js';
+
 	let registration_toggler = false;
 	let loggedinsucces = false;
 	let loginmessage = '';
+	let user_data1 = {};
+
+	async function get_user_data() {
+		const user_data_from_back = await fetch('http://localhost:10010/users/get-user-by-id', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + $user_Data.SessionToken
+			},
+			credentials: 'include'
+		});
+
+		user_data1 = await user_data_from_back.json();
+
+		console.log('User Data from backend: ', user_data1.data);
+
+		updateExtendedUserData(user_data1.data);
+	}
+
+	let email1='';
+	let password1='';
+	let password2='';
+	let phone1='';
+	let name1='';
+
+	function validate_email() {
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (email.length > 0 && email.length < 50) {
+
+			if (emailRegex.test(email)) {
+				return true;
+			}
+			else {
+				alert('Enter a valid email address!');
+				return false;
+			}
+		} else {
+			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			return false;
+		}
+	}
+
+	function validate_password() {
+		if (password1.length > 0 && password1.length < 50) {
+			return true;
+		} else {
+			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			return false;
+		}
+	}
+
+	function confirm_password() {
+		if (password1 == password2) {
+			return true;
+		} else {
+			alert('Passwords do not match!');
+			return false;
+		}
+	}
+
+	function validate_phone() {
+		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+			return true;
+		} else {
+			alert('Enter a valid phone number!');
+			return false;
+		}
+	}
+
+	function validate_name() {
+		if (name1.length > 0 && name1.length < 50) {
+			return true;
+		} else {
+			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			return false;
+		}
+	}	
+
+	function validationCheck() {
+		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+	}
+
+	async function registration(event) {
+		event.preventDefault();
+		if (!validationCheck()) return;
+		const user = {
+			email: email,
+			password: password1,
+			phone: phone1,
+			name: name1
+		};
+
+		console.log("User Data: ", user);
+	}
+
 </script>
 
 <Modal
@@ -61,17 +163,18 @@
 							>
 								Create an account
 							</h1>
-							<form class="space-y-4 md:space-y-6" action="#">
+							<form class="space-y-4 md:space-y-6">
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"
+										class="block mb-2 text-sm font-medium"										
 										style="color: aliceblue;">Your email</label
 									>
 									<input
 										type="email"
 										name="email"
 										id="email"
+										bind:value={email1}
 										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										placeholder="name@company.com"
 										required=""
@@ -87,6 +190,7 @@
 										type="password"
 										name="password"
 										id="password"
+										bind:value={password1}
 										placeholder="••••••••"
 										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										required=""
@@ -145,24 +249,29 @@
 
 									console.log('Parsed data: ', parsedData);
 
-									const { success, message, email, id, name } = parsedData[0];
+									const { success, message, email, id, name, session_token } = parsedData[0];
 
 									console.log('Login Success:', parsedData[success]);
 									console.log('Message:', parsedData[message]);
 									console.log('Email:', parsedData[email]);
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
-
+									console.log('Session Token:', parsedData[session_token]);
+									
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
 										$isLoggedIn = true;
 										$register_login_popup = true;
-										user_Data.set({
-											Email: 'msh@gmail.com',
-											ID: '66f66998cdd371da47560355',
-											Name: 'Mayank Sharma'
+										updateUserData({
+											Email: parsedData[email],
+											ID: parsedData[id],
+											Name: parsedData[name],
+											SessionToken: parsedData[session_token]
 										});
+
+										await get_user_data();
+
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;

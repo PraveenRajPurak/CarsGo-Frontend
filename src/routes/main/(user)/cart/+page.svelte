@@ -41,7 +41,7 @@
 		sum = 0;
 		for (let i = 0; i < cartItems.length; i++) {
 			console.log(cartItems[i]);
-			let item_price = parseInt(cartItems[i].price.substring(3));
+			let item_price = parseInt(cartItems[i].price);
 			let item_quantity = cartItems[i].quantity;
 			sum += item_price * item_quantity;
 		}
@@ -78,7 +78,7 @@
 						</div>
 
 						<div class="single-item">
-							<p class="single-item-text">{item.price}</p>
+							<p class="single-item-text">Rs.{item.price}</p>
 						</div>
 
 						<div class="single-item">
