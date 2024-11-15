@@ -1,4 +1,37 @@
 export const actions = {
+    'signup': async ({ request }) => {
+        const data = await request.formData();
+        const name = data.get('name');
+        const email = data.get('email');
+        const password = data.get('password');
+        const phone = data.get('phone');
+
+        console.log("Data provided for signup: ", name, " , ", email, " , ", password, " , ", phone)
+
+        try {
+            const res = await fetch("http://localhost:10010/sign-up", {
+                method: 'POST',
+                body: JSON.stringify({ name, email, password, phone }),
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+
+            const resData = await res.json();
+            console.log("Response received: ", resData);
+
+            if (resData.message === "User created successfully") {
+                return {
+                    success: true,
+                    message: resData.message
+                };
+            } else {
+                return { error: "Failed to signup! Try again" };
+            }
+        }
+        catch (err) {
+            console.error("Error during signup:", err);
+        }
+    },
 
     'login': async ({ request }) => {
         const data = await request.formData();
@@ -147,7 +180,7 @@ export const actions = {
 
         const data = await request.formData();
 
-        const order_items = data.get('order_items');
+        const order_items = JSON.parse(data.get('order_items'));
         let order_amount = data.get('order_amount');
         order_amount = parseInt(order_amount);
         const order_date = data.get('order_date');
@@ -182,7 +215,7 @@ export const actions = {
                     order_date: resData.data.order_date,
                     order_status: resData.data.order_status,
                     order_amount: resData.data.order_amount,
-                   
+
                 }
             }
 

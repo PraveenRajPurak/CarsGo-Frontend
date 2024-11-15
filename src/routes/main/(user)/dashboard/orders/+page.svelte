@@ -55,7 +55,8 @@
 </script>
 
 <div class="orders">
-<Table style="background: transparent; border-color: #0aac71; border-width: 1px; color: aliceblue; width: 700px;" hoverable={true}>
+    <h1 class="orders-heading">Your Orders</h1>
+<Table style="background: transparent; border-color: #0aac71; border-width: 1px; color: aliceblue; width: 700px; margin-top:20px;" hoverable={true}>
 	<TableHead style="background: transparent" class="bg-gray-50 dark:bg-gray-700">
 		<TableHeadCell style=" color: aliceblue;">Product name</TableHeadCell>
 		<TableHeadCell style=" color: aliceblue;" class="table-header-text">Category</TableHeadCell>
@@ -84,8 +85,13 @@
         justify-content: center;
         align-items: center;
         justify-items: center;
-        position: absolute;
-        top: 70%; 
-        margin-top: 40px;
+        margin-top: 60px;
+    }
+
+    .orders-heading{
+        color: aliceblue;
+        font-weight: 500;
+        font-family: 'montserrat', sans-serif;
+        font-size: 30px;
     }
 </style>

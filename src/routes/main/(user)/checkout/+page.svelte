@@ -8,19 +8,130 @@
 		updateExtendedUserData
 	} from '../../../../stores/user.js';
 	import { cart } from '../../../../stores/cart.js';
+	import { Modal, ButtonGroup, GradientButton } from 'flowbite-svelte';
+	import { register_login_popup } from '../../../../stores/user.js';
+
+	let loggedinsucces = false;
+	let loginmessage = '';
 
 	let cart_for_checkout = [];
 
 	cart.subscribe((value) => {
 		cart_for_checkout = value;
 	});
-	
+
 	if (cart_for_checkout.length == 0) {
-		console.log("Cart is empty and look for something else");
+		console.log('Cart is empty and look for something else');
+	} else {
+		console.log("If it's working you good", cart_for_checkout);
 	}
 
-	else {
-		console.log("If it's working you good", cart_for_checkout);
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
+
+	function validate_email() {
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (email1.length > 0 && email1.length < 50) {
+			if (emailRegex.test(email1)) {
+				return true;
+			} else {
+				alert('Enter a valid email address!');
+				return false;
+			}
+		} else {
+			alert("Email Field can't be empty and should be less than 50 characters!");
+			return false;
+		}
+	}
+
+	function validate_password() {
+		if (password1.length > 0 && password1.length < 50) {
+			return true;
+		} else {
+			alert("Password Field can't be empty and should be less than 50 characters!");
+			return false;
+		}
+	}
+
+	function confirm_password() {
+		if (password1 == password2) {
+			return true;
+		} else {
+			alert('Passwords do not match!');
+			return false;
+		}
+	}
+
+	function validate_phone1() {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
+			return true;
+		} else {
+			alert('Enter a valid phone number!');
+			return false;
+		}
+	}
+
+	function validate_name() {
+		if (name1.length > 0 && name1.length < 50) {
+			return true;
+		} else {
+			alert("Name Field can't be empty and should be less than 50 characters!");
+			return false;
+		}
+	}
+
+	function validation_Check() {
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone1() &&
+			validate_name()
+		);
+	}
+
+	let registration_toggler_2 = false;
+
+	async function registration(event) {
+		event.preventDefault();
+		if (!validation_Check()) return;
+		const user = {
+			email: email1,
+			password: password1,
+			phone: phone1,
+			name: name1
+		};
+
+		console.log('User Data: ', user);
+
+		const formData = new FormData();
+		formData.append('email', user.email);
+		formData.append('password', user.password);
+		formData.append('phone', user.phone);
+		formData.append('name', user.name);
+
+		const response = await fetch('?/signup', { method: 'POST', body: formData });
+
+		const res = await response.json();
+
+		console.log('Response received in html : ', res);
+
+		let parsedData = JSON.parse(res.data);
+
+		const { success, message } = parsedData[0];
+
+		if (parsedData[success]) {
+			alert('Registration successful!');
+			registration_toggler_2 = false;
+		} else {
+			alert(message);
+		}
 	}
 
 	let address_conf_btn = false;
@@ -328,15 +439,13 @@
 
 		const formData = new FormData();
 
-		formData.append('order_items', order.order_items);
+		formData.append('order_items', JSON.stringify(order.order_items));
 		formData.append('order_amount', sum);
 		formData.append('order_date', new Date().toISOString());
 		formData.append('order_status', 'Pending');
 		formData.append('customer_id', $user_Extended_Data._id);
 		formData.append('transaction_id', txn_id);
 		formData.append('session_token', $user_Data.SessionToken);
-
-		console.log('Form Data:', order);
 
 		const response = await fetch('?/order_creation', { method: 'POST', body: formData });
 
@@ -348,8 +457,7 @@
 
 		console.log('Parsed data: ', parsedData);
 
-		const { success, message, order_id, order_date, order_amount, order_status } =
-			parsedData[0];
+		const { success, message, order_id, order_date, order_amount, order_status } = parsedData[0];
 
 		console.log('Order Success:', parsedData[success]);
 		console.log('Message:', parsedData[message]);
@@ -369,49 +477,143 @@
 	}
 </script>
 
-{#if order_confirmed}
-	<div class="order-confirmed">
-		<h1 class="playfair-display-order-confirmed-heading">Thanks for your order!</h1>
-		<p class="order-confirmed-text">
-			Your order has been placed successfully. We will contact you soon.
-		</p>
-		<div class="order-summary-container">
-			<p class="order-summary-heading">Order Summary</p>
-			<p class="order-summary-text">
-				Order ID: {order_id1}<br />
-				Order Date: {order_date1}<br />
-				Order Status: {order_status1}<br />
-				Order Amount: {order_amount1}<br />
-				Payment Method: {payment_method}<br />
-				Transaction ID: {txn_id} <br />
-			</p>
-			<p class="order-summary-text" style ="align-self: center; justify-self: center; margin-top: 5px;">Items:</p>
-			{#each cart_for_checkout as item}
-				<p class="order-summary-text">
-					{item.name} X  {item.quantity}<br />
-				</p>
-			{/each}
-
+<Modal
+	bind:open={$register_login_popup}
+	size="md"
+	autoclose={false}
+	class="w-full"
+	style="background: linear-gradient(150deg,black, #002b1b, black);"
+>
+	{#if loggedinsucces}
+		<div>
+			{loginmessage}
 		</div>
-		<button class="btn-go-to-products-version2" on:click={() => goto('/main/products')}>Look for more beautiful cars...</button>
-		<img src="/placed_order_car2.png" alt="Order Placed" style="height: 600px;" />
-	</div>
-{:else if $cart.length < 1}
-	<div class="empty-cart-parent">
-		<h1 class="checkout-heading">Can't checkout! Cart is empty</h1>
-		<img
-			src="/empty_cart.png"
-			alt="Empty Cart"
-			style="width: 350px; height: 350px; margin: 20px;"
-		/>
-		<button class="btn-go-to-products" on:click={() => goto('/main/products')}
-			>Go to products</button
-		>
-	</div>
-{:else}
-	<div class="checkout-page">
-		{#if !$isLoggedIn}
-			<h1 class="address-heading">Please Login to Checkout</h1>
+	{:else}
+		<ButtonGroup style="position : relative; left: 220px;">
+			<GradientButton
+				on:click={() => {
+					registration_toggler_2 = true;
+				}}
+				shadow
+				color="green">Register</GradientButton
+			>
+			<GradientButton
+				on:click={() => {
+					registration_toggler_2 = false;
+				}}
+				shadow
+				color="teal">Login</GradientButton
+			>
+		</ButtonGroup>
+		{#if registration_toggler_2}
+			<section style="background-color: transparent;">
+				<div class="flex flex-col items-center justify-center">
+					<div
+						class="w-full rounded-lg shadow sm:max-w-md"
+						style="background-color: transparent; border-color: #E5E7EB;"
+					>
+						<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+							<h1
+								class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+								style="color: aliceblue;"
+							>
+								Create an account
+							</h1>
+							<form class="space-y-4 md:space-y-6">
+								<div>
+									<label
+										for="email"
+										class="block mb-2 text-sm font-medium"										
+										style="color: aliceblue;">Your email</label
+									>
+									<input
+										type="email"
+										name="email"
+										id="email"
+										bind:value={email1}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										placeholder="name@company.com"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
+										for="name"
+										class="block mb-2 text-sm font-medium"										
+										style="color: aliceblue;">Your name</label
+									>
+									<input
+										type="name"
+										name="name"
+										id="name"
+										bind:value={name1}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										placeholder="John"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
+										for="phone"
+										class="block mb-2 text-sm font-medium"										
+										style="color: aliceblue;">Your phone</label
+									>
+									<input
+										type="phone"
+										name="phone"
+										id="phone"
+										bind:value={phone1}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										placeholder="9XXXXXXXXX"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
+										for="password"
+										class="block mb-2 text-sm font-medium"
+										style="color: aliceblue;">Password</label
+									>
+									<input
+										type="password"
+										name="password"
+										id="password"
+										bind:value={password1}
+										placeholder="••••••••"
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
+										for="confirm-password"
+										class="block mb-2 text-sm font-medium"
+										style="color: aliceblue;">Confirm password</label
+									>
+									<input
+										type="confirm-password"
+										name="confirm-password"
+										id="confirm-password"
+										bind:value={password2}
+										placeholder="••••••••"
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										required=""
+									/>
+								</div>
+								<button
+									on:click={()=>{
+										registration(event);
+									}}
+									type="submit"
+									class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+									>Create an account</button
+								>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+		{:else}
 			<section style="background-color: transparent;">
 				<div class="flex flex-col items-center justify-center">
 					<div
@@ -447,8 +649,12 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-
+									
 									if (parsedData[success]) {
+										loggedinsucces = true;
+										loginmessage = 'Successfully logged in!';
+										$isLoggedIn = true;
+										$register_login_popup = true;
 										updateUserData({
 											Email: parsedData[email],
 											ID: parsedData[id],
@@ -458,9 +664,9 @@
 
 										await get_user_data();
 
-										$isLoggedIn = true;
 									} else {
-										alert(parsedData[message]);
+										loginmessage = res.error;
+										loggedinsucces = false;
 									}
 								}}
 							>
@@ -504,6 +710,278 @@
 					</div>
 				</div>
 			</section>
+		{/if}
+	{/if}
+</Modal>
+
+
+{#if order_confirmed}
+	<div class="order-confirmed">
+		<h1 class="playfair-display-order-confirmed-heading">Thanks for your order!</h1>
+		<p class="order-confirmed-text">
+			Your order has been placed successfully. We will contact you soon.
+		</p>
+		<div class="order-summary-container">
+			<p class="order-summary-heading">Order Summary</p>
+			<p class="order-summary-text">
+				Order ID: {order_id1}<br />
+				Order Date: {order_date1}<br />
+				Order Status: {order_status1}<br />
+				Order Amount: {order_amount1}<br />
+				Payment Method: {payment_method}<br />
+				Transaction ID: {txn_id} <br />
+			</p>
+			<p
+				class="order-summary-text"
+				style="align-self: center; justify-self: center; margin-top: 5px;"
+			>
+				Items:
+			</p>
+			{#each cart_for_checkout as item}
+				<p class="order-summary-text">
+					{item.name} X {item.quantity}<br />
+				</p>
+			{/each}
+		</div>
+		<button class="btn-go-to-products-version2" on:click={() => goto('/main/products')}
+			>Look for more beautiful cars...</button
+		>
+		<img src="/placed_order_car2.png" alt="Order Placed" style="height: 600px;" />
+	</div>
+{:else if $cart.length < 1}
+	<div class="empty-cart-parent">
+		<h1 class="checkout-heading">Can't checkout! Cart is empty</h1>
+		<img
+			src="/empty_cart.png"
+			alt="Empty Cart"
+			style="width: 350px; height: 350px; margin: 20px;"
+		/>
+		<button class="btn-go-to-products" on:click={() => goto('/main/products')}
+			>Go to products</button
+		>
+	</div>
+{:else}
+	<div class="checkout-page">
+		{#if !$isLoggedIn}
+			<ButtonGroup>
+				<GradientButton
+					on:click={() => {
+						registration_toggler_2 = true;
+					}}
+					shadow
+					color="green">Register</GradientButton
+				>
+				<GradientButton
+					on:click={() => {
+						registration_toggler_2 = false;
+					}}
+					shadow
+					color="teal">Login</GradientButton
+				>
+			</ButtonGroup>
+			{#if registration_toggler_2}
+				<section style="background-color: transparent;">
+					<div class="flex flex-col items-center justify-center">
+						<div
+							class="w-full rounded-lg shadow sm:max-w-md"
+							style="background-color: transparent; border-color: #E5E7EB;"
+						>
+							<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+								<h1
+									class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+									style="color: aliceblue;"
+								>
+									Create an account to checkout
+								</h1>
+								<form class="space-y-4 md:space-y-6">
+									<div>
+										<label
+											for="email"
+											class="block mb-2 text-sm font-medium"
+											style="color: aliceblue;">Your email</label
+										>
+										<input
+											type="email"
+											name="email"
+											id="email"
+											bind:value={email1}
+											class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											placeholder="name@company.com"
+											required=""
+										/>
+									</div>
+									<div>
+										<label
+											for="name"
+											class="block mb-2 text-sm font-medium"
+											style="color: aliceblue;">Your name</label
+										>
+										<input
+											type="name"
+											name="name"
+											id="name"
+											bind:value={name1}
+											class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											placeholder="John"
+											required=""
+										/>
+									</div>
+									<div>
+										<label
+											for="phone"
+											class="block mb-2 text-sm font-medium"
+											style="color: aliceblue;">Your phone</label
+										>
+										<input
+											type="phone"
+											name="phone"
+											id="phone"
+											bind:value={phone1}
+											class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											placeholder="9XXXXXXXXX"
+											required=""
+										/>
+									</div>
+									<div>
+										<label
+											for="password"
+											class="block mb-2 text-sm font-medium"
+											style="color: aliceblue;">Password</label
+										>
+										<input
+											type="password"
+											name="password"
+											id="password"
+											bind:value={password1}
+											placeholder="••••••••"
+											class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											required=""
+										/>
+									</div>
+									<div>
+										<label
+											for="confirm-password"
+											class="block mb-2 text-sm font-medium"
+											style="color: aliceblue;">Confirm password</label
+										>
+										<input
+											type="confirm-password"
+											name="confirm-password"
+											id="confirm-password"
+											bind:value={password2}
+											placeholder="••••••••"
+											class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											required=""
+										/>
+									</div>
+									<button
+										on:click={() => {
+											registration(event);
+										}}
+										type="submit"
+										class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+										>Create an account</button
+									>
+								</form>
+							</div>
+						</div>
+					</div>
+				</section>
+			{:else}
+				<h1 class="address-heading" style="margin-top: 30px;">Please Login to Checkout</h1>
+				<section style="background-color: transparent; margin-top: -30px">
+					<div class="flex flex-col items-center justify-center">
+						<div
+							class="w-full rounded-lg shadow sm:max-w-md"
+							style="background-color: transparent; border-color: #E5E7EB;"
+						>
+							<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+								<h1
+									class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+									style="color: aliceblue;"
+								>
+									Sign in to your account
+								</h1>
+								<form
+									class="space-y-4 md:space-y-6"
+									method="post"
+									on:submit|preventDefault={async (event) => {
+										const formData = new FormData(event.target);
+										const response = await fetch('?/login', { method: 'POST', body: formData });
+										const res = await response.json();
+
+										console.log('Response received in html : ', res);
+
+										let parsedData = JSON.parse(res.data);
+
+										console.log('Parsed data: ', parsedData);
+
+										const { success, message, email, id, name, session_token } = parsedData[0];
+
+										console.log('Login Success:', parsedData[success]);
+										console.log('Message:', parsedData[message]);
+										console.log('Email:', parsedData[email]);
+										console.log('ID:', parsedData[id]);
+										console.log('Name:', parsedData[name]);
+										console.log('Session Token:', parsedData[session_token]);
+
+										if (parsedData[success]) {
+											updateUserData({
+												Email: parsedData[email],
+												ID: parsedData[id],
+												Name: parsedData[name],
+												SessionToken: parsedData[session_token]
+											});
+
+											await get_user_data();
+
+											$isLoggedIn = true;
+										} else {
+											alert(parsedData[message]);
+										}
+									}}
+								>
+									<div>
+										<label
+											for="email"
+											class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+											style="color: aliceblue;">Your email</label
+										>
+										<input
+											type="email"
+											name="email"
+											id="email"
+											class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											placeholder="name@company.com"
+											required=""
+										/>
+									</div>
+									<div>
+										<label
+											for="password"
+											class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+											style="color: aliceblue;">Password</label
+										>
+										<input
+											type="password"
+											name="password"
+											id="password"
+											placeholder="••••••••"
+											class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+											required=""
+										/>
+									</div>
+									<button
+										type="submit"
+										class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+										>Sign in</button
+									>
+								</form>
+							</div>
+						</div>
+					</div>
+				</section>
+			{/if}
 		{:else}
 			<h1 class="checkout-heading">You are almost there...</h1>
 			<div class="checkout-container">
@@ -938,13 +1416,7 @@
 		font-style: normal;
 		color: white;
 	}
-	/* .checkmark {
-		width: 20px;
-		height: 20px;
-		position: relative;
-		top: -10px;
-		left: -250px;
-	} */
+
 	.address-containers {
 		display: flex;
 		flex-direction: row;
@@ -953,21 +1425,8 @@
 		justify-items: center;
 	}
 
-	/* .validate-btn {
-		background-color: #002b1b;
-		color: white;
-		font-size: 15px;
-		font-weight: 500;
-		font-family: 'montserrat', sans-serif;
-		border-radius: 5px;
-		padding: 5px;
-		position: relative;
-		top: -12px;
-		left: -200px;
-	} */
-
 	.btn-go-to-products-version2 {
-		border-color:#002b1b;
+		border-color: #002b1b;
 		border-width: 0.5px;
 		color: white;
 		font-size: 20px;

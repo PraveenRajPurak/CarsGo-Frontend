@@ -51,9 +51,9 @@
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		if (email.length > 0 && email.length < 50) {
+		if (email1.length > 0 && email1.length < 50) {
 
-			if (emailRegex.test(email)) {
+			if (emailRegex.test(email1)) {
 				return true;
 			}
 			else {
@@ -110,13 +110,37 @@
 		event.preventDefault();
 		if (!validationCheck()) return;
 		const user = {
-			email: email,
+			email: email1,
 			password: password1,
 			phone: phone1,
 			name: name1
 		};
 
 		console.log("User Data: ", user);
+
+		const formData = new FormData();
+		formData.append('email', user.email);
+		formData.append('password', user.password);
+		formData.append('phone', user.phone);
+		formData.append('name', user.name);
+
+		const response = await fetch('?/signup', { method: 'POST', body: formData });
+
+		const res = await response.json();
+
+		console.log('Response received in html : ', res);
+
+		let parsedData = JSON.parse(res.data);
+
+		const { success, message} = parsedData[0];
+
+		if (parsedData[success]) {
+			alert("Registration successful!");
+			registration_toggler = false;
+		}
+		else {
+			alert(message);
+		}
 	}
 
 </script>
@@ -182,6 +206,38 @@
 								</div>
 								<div>
 									<label
+										for="name"
+										class="block mb-2 text-sm font-medium"										
+										style="color: aliceblue;">Your name</label
+									>
+									<input
+										type="name"
+										name="name"
+										id="name"
+										bind:value={name1}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										placeholder="John"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
+										for="phone"
+										class="block mb-2 text-sm font-medium"										
+										style="color: aliceblue;">Your phone</label
+									>
+									<input
+										type="phone"
+										name="phone"
+										id="phone"
+										bind:value={phone1}
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										placeholder="9XXXXXXXXX"
+										required=""
+									/>
+								</div>
+								<div>
+									<label
 										for="password"
 										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Password</label
@@ -206,12 +262,16 @@
 										type="confirm-password"
 										name="confirm-password"
 										id="confirm-password"
+										bind:value={password2}
 										placeholder="••••••••"
 										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										required=""
 									/>
 								</div>
 								<button
+									on:click={()=>{
+										registration(event);
+									}}
 									type="submit"
 									class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
 									>Create an account</button
@@ -332,7 +392,7 @@
 			<h2 class="left-upper-body-heading" style="margin-top: -7px; position: relative; left:40px">
 				Every Time
 			</h2>
-			<p class="left-upper-body-text" style="margin-top: -10px; position: relative; left:40px">
+			<p class="left-upper-body-text" style="margin-top: 10px; margin-bottom: 15px; position: relative; left:40px">
 				Explore our wide range of premium vehicles, tailored to meet your needs.
 			</p>
 			<button
@@ -351,7 +411,7 @@
 	</div>
 
 	<div class="brands">
-		<h2 class="left-upper-body-heading" style="margin-bottom:15px;">Brands We Offer</h2>
+		<h2 class="left-upper-body-heading" style="margin-top:22px; margin-bottom:20px;">Brands We Offer</h2>
 		<img src="/brands.png" alt="Brand" style="height: 400px;" />
 	</div>
 	<Footer />
