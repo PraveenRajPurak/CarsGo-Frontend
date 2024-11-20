@@ -32,7 +32,7 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + $user_Data.SessionToken
+				Authorization: 'Bearer ' + $user_Data.SessionToken
 			},
 			credentials: 'include'
 		});
@@ -44,25 +44,23 @@
 		updateExtendedUserData(user_data1.data);
 	}
 
-	let email1='';
-	let password1='';
-	let password2='';
-	let phone1='';
-	let name1='';
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (email1.length > 0 && email1.length < 50) {
-
 			if (emailRegex.test(email1)) {
 				return true;
-			}
-			else {
+			} else {
 				alert('Enter a valid email address!');
 				return false;
 			}
 		} else {
-			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			alert("Email Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -71,7 +69,7 @@
 		if (password1.length > 0 && password1.length < 50) {
 			return true;
 		} else {
-			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			alert("Password Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -86,7 +84,10 @@
 	}
 
 	function validate_phone() {
-		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
 			return true;
 		} else {
 			alert('Enter a valid phone number!');
@@ -98,13 +99,19 @@
 		if (name1.length > 0 && name1.length < 50) {
 			return true;
 		} else {
-			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			alert("Name Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
-	}	
+	}
 
 	function validationCheck() {
-		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone() &&
+			validate_name()
+		);
 	}
 
 	async function registration(event) {
@@ -117,7 +124,7 @@
 			name: name1
 		};
 
-		console.log("User Data: ", user);
+		console.log('User Data: ', user);
 
 		const formData = new FormData();
 		formData.append('email', user.email);
@@ -133,13 +140,12 @@
 
 		let parsedData = JSON.parse(res.data);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		if (parsedData[success]) {
-			alert("Registration successful!");
+			alert('Registration successful!');
 			registration_toggler = false;
-		}
-		else {
+		} else {
 			alert(message);
 		}
 	}
@@ -175,55 +181,6 @@
 	afterUpdate(() => {
 		console.log('Products from store (after update): ', products_from_store);
 	});
-
-	let categories = [
-		{
-			id: 1,
-			name: 'Hatchback',
-			img_url: '/car4.png'
-		},
-		{
-			id: 2,
-			name: 'Sedan',
-			img_url: '/car5.png'
-		},
-		{
-			id: 1,
-			name: 'SUV',
-			img_url: '/car6.png'
-		}
-	];
-
-	let products_ = [
-		{
-			id: 1,
-			name: 'Maruti Suzuki Swift',
-			img_url: '/car1.png',
-			category: 'Hatchback',
-			price: 'Rs.6,00,000'
-		},
-		{
-			id: 2,
-			name: 'Maruti Suzuki Baleno',
-			img_url: '/car1.png',
-			category: 'Hatchback',
-			price: 'Rs.6,00,000'
-		},
-		{
-			id: 3,
-			name: 'Tata Nexon',
-			img_url: '/car1.png',
-			category: 'Hatchback',
-			price: 'Rs.8,00,000'
-		},
-		{
-			id: 4,
-			name: 'Hyundai i20',
-			img_url: '/car1.png',
-			category: 'Hatchback',
-			price: 'Rs.7,00,000'
-		}
-	];
 
 	let category_info = false;
 
@@ -284,7 +241,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -298,10 +255,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -316,7 +271,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -362,7 +317,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -410,7 +365,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -424,7 +379,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -476,7 +430,7 @@
 </Modal>
 
 <div class="product-list">
-	<h1 class="product-heading">Our Categories</h1>
+	<h1 class="product-heading" style="align-self: center; margin-top: 30px;">Our Categories</h1>
 	<div class="categories">
 		{#each Categories as category}
 			<div
@@ -485,25 +439,38 @@
 					handlecategoryClick(category);
 				}}
 			>
-				<img
-					src="/{category.name}.png"
-					alt="category"
-					style="width: 100px; height: 100px; border-radius: 50%;"
-				/>
+				<img src="/{category.name}.png" alt="category" class="category-image" />
 				<p class="category-name">{category.name}</p>
 			</div>
 		{/each}
 	</div>
 
 	{#if category_info}
-		<h1 class="product-heading" style="margin-top:30px;">
-			Our {category_selected.name} Collection...
-		</h1>
-		<p class="category-description">{category_selected.general_description}</p>
+		<div class="category-ctn">
+			<h1 class="product-heading" style="margin-top:30px; align-self: center;">
+				Our {category_selected.name} Collection...
+			</h1>
+			{#if products_from_store.length != Products.length}
+				<button
+					class="clear-filters-btn"
+					on:click={() => {
+						category_info = false;
+						products_from_store = Products;
+						goto('/main/products');
+					}}
+				>
+					Clear Filters
+				</button>
+			{/if}
+		</div>
+
+		<p class="category-description" style="align-self: center;">
+			{category_selected.general_description}
+		</p>
 	{/if}
 
 	{#if !category_info}
-		<h1 class="product-heading" style="margin-top:30px;">Our Products</h1>
+		<h1 class="product-heading" style="margin-top:40px; align-self: center;">Our Products</h1>
 	{/if}
 
 	<div class="products-main">
@@ -532,18 +499,7 @@
 			<h1 class="cinzel-more-design-top">More Cars</h1>
 			<img src="/more_left.png" alt="product" style="width: 250px; height: 250px;" />
 			<h1 class="cinzel-more-design-btm" style="margin-top: -60px;">Coming Soon</h1>
-
-			<!-- <div class="product-prices">
-					<p class="product-price-rgl"><s>Rs.{product.regularprice}</s>&nbsp;&nbsp;</p>
-					<p class="product-price-sale">Rs.{product.saleprice}</p>
-				</div> -->
 		</div>
-		{#if products_from_store.length != Products.length} 
-		<button class="clear-filters-btn" on:click={() => {
-			category_info = false;
-			products_from_store = Products;
-			goto('/main/products')}}> Clear Filters </button>
-		{/if}
 	</div>
 </div>
 
@@ -587,49 +543,68 @@
 	}
 
 	.clear-filters-btn {
-		background-color: #002b1b;
+		background-color: transparent;
+		border-color: #002b1b;
+		border-top-width: 0.65px;
+		border-left-width: 0.65px;
 		color: white;
 		font-size: 20px;
 		font-weight: 500;
 		font-family: 'montserrat', sans-serif;
 		border-radius: 5px;
 		padding: 10px;
-		margin-top: 20px;
+		align-items: center;
+		justify-items: center;
+		position: relative;
+		margin-left: 1.8rem;
+	}
+	.clear-filters-btn:hover {
+		background-color: transparent;
+		border-color: #002b1b;
+		border-bottom-width: 0.65px;
+		border-right-width: 0.65px;
+		color: white;
+		font-size: 20px;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		border-radius: 5px;
+		padding: 10px;
+		align-items: center;
+		justify-items: center;
+		position: relative;
+		margin-left: 1.8rem;
 	}
 	.product-list {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
 		justify-items: center;
-		margin-bottom: 40px;
 	}
 
 	.categories {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+		align-self: center;
 		align-items: center;
-		justify-items: center;
-		position: relative;
-		left: 55px;
+		justify-items: center;		
 	}
 
 	.category {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		align-self: center;
 		align-items: center;
 		justify-items: center;
 		margin-right: 120px;
+		cursor: pointer;
 	}
 
-	.product-heading {
-		margin-bottom: 20px;
-		font-size: 30px;
-		font-weight: 700;
-		font-family: 'montserrat', sans-serif;
-		color: white;
+	.category-image {
+		width: 6rem;
+		height: 6rem;
+		border-radius: 50%;
 	}
 
 	.category-name {
@@ -640,26 +615,77 @@
 		color: white;
 	}
 
+	@media (min-width: 550px) and (max-width: 690px) {
+		.category {
+			margin-right: 80px;
+		}
+	}
+	@media (max-width: 550px) {
+		.category {
+			margin-right: 50px;
+		}
+
+		.categories {
+			left: 18px;
+			align-self: center;
+			margin-bottom: 2rem;
+		}
+
+		.category-image {
+			width: 4rem;
+			height: 4rem;
+			border-radius: 50%;
+		}
+
+		.category-name {
+			font-size: 10px;
+			margin-bottom: -20px;
+		}
+	}
+
+	.product-heading {
+		margin-bottom: 20px;
+		font-size: 30px;
+		font-weight: 700;
+		font-family: 'montserrat', sans-serif;
+		color: white;
+	}
+
 	.products-main {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		gap: 6rem;
-		justify-items: center;
-		align-items: center;
 		justify-content: center;
+		align-items: start;
+		margin: 2rem 8rem 6rem 8rem;
 	}
 
 	.product {
-		padding: 30px;
+		padding: 1.5rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		justify-items: center;
-		margin-bottom: 20px;
+		background-color: transparent;
 		border-color: #002b1b;
-		border-width: 2px;
+		border-width: 0.5px;
+		border-radius: 8px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
 		cursor: pointer;
+	}
+
+	.product:hover {
+		transform: scale(1.05);
+		box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+	}
+
+	.product img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 5px;
 	}
 
 	.product-name {
@@ -705,9 +731,19 @@
 	.category-description {
 		margin-top: 10px;
 		margin-bottom: 30px;
+		margin-left: 30px;
+		margin-right: 30px;
 		font-size: 20px;
 		font-weight: 500;
 		font-family: 'montserrat', sans-serif;
 		color: white;
+	}
+
+	.category-ctn {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		justify-items: center;
 	}
 </style>

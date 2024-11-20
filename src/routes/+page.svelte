@@ -21,6 +21,24 @@
 	} from 'flowbite-svelte';
 	import { register_login_popup } from '../stores/user.js';
 
+	import { onMount } from 'svelte';
+
+	let isMobileView = false; 
+
+	const updateView = () => {
+		isMobileView = window.innerWidth <= 850;
+	};
+
+	onMount(() => {
+		updateView(); // Initial check
+		window.addEventListener('resize', updateView);
+		return () => window.removeEventListener('resize', updateView); // Cleanup
+	});
+
+	const handleClick = () => {
+		goto('/main/products');
+	};
+
 	let registration_toggler = false;
 	let loggedinsucces = false;
 	let loginmessage = '';
@@ -31,7 +49,7 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + $user_Data.SessionToken
+				Authorization: 'Bearer ' + $user_Data.SessionToken
 			},
 			credentials: 'include'
 		});
@@ -43,25 +61,23 @@
 		updateExtendedUserData(user_data1.data);
 	}
 
-	let email1='';
-	let password1='';
-	let password2='';
-	let phone1='';
-	let name1='';
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (email1.length > 0 && email1.length < 50) {
-
 			if (emailRegex.test(email1)) {
 				return true;
-			}
-			else {
+			} else {
 				alert('Enter a valid email address!');
 				return false;
 			}
 		} else {
-			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			alert("Email Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -70,7 +86,7 @@
 		if (password1.length > 0 && password1.length < 50) {
 			return true;
 		} else {
-			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			alert("Password Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -85,7 +101,10 @@
 	}
 
 	function validate_phone() {
-		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
 			return true;
 		} else {
 			alert('Enter a valid phone number!');
@@ -97,13 +116,19 @@
 		if (name1.length > 0 && name1.length < 50) {
 			return true;
 		} else {
-			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			alert("Name Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
-	}	
+	}
 
 	function validationCheck() {
-		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone() &&
+			validate_name()
+		);
 	}
 
 	async function registration(event) {
@@ -116,7 +141,7 @@
 			name: name1
 		};
 
-		console.log("User Data: ", user);
+		console.log('User Data: ', user);
 
 		const formData = new FormData();
 		formData.append('email', user.email);
@@ -132,17 +157,15 @@
 
 		let parsedData = JSON.parse(res.data);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		if (parsedData[success]) {
-			alert("Registration successful!");
+			alert('Registration successful!');
 			registration_toggler = false;
-		}
-		else {
+		} else {
 			alert(message);
 		}
 	}
-
 </script>
 
 <Modal
@@ -191,7 +214,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -205,10 +228,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -223,7 +244,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -269,7 +290,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -317,7 +338,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -331,7 +352,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -392,7 +412,10 @@
 			<h2 class="left-upper-body-heading" style="margin-top: -7px; position: relative; left:40px">
 				Every Time
 			</h2>
-			<p class="left-upper-body-text" style="margin-top: 10px; margin-bottom: 15px; position: relative; left:40px">
+			<p
+				class="left-upper-body-text"
+				style="margin-top: 10px; margin-bottom: 15px; position: relative; left:40px"
+			>
 				Explore our wide range of premium vehicles, tailored to meet your needs.
 			</p>
 			<button
@@ -406,12 +429,15 @@
 			</button>
 		</div>
 		<div class="right-upper-body">
-			<img src="/car6.png" alt="Car" style="height: 530px;" />
+			<img src={isMobileView ? "/mb-car1.png" : "/car6.png"} on:click={isMobileView ? handleClick : null}  alt="Car" style={isMobileView ? "height: 100%;" : "height: 530px;"} />
+			<div class="animated-text">`Driven by dreams, powered by memories`</div>
 		</div>
 	</div>
 
 	<div class="brands">
-		<h2 class="left-upper-body-heading" style="margin-top:22px; margin-bottom:20px;">Brands We Offer</h2>
+		<h2 class="left-upper-body-heading" style="margin-top:22px; margin-bottom:20px;">
+			Brands We Offer
+		</h2>
 		<img src="/brands.png" alt="Brand" style="height: 400px;" />
 	</div>
 	<Footer />
@@ -497,6 +523,64 @@
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
+		position: relative;
+	}
+
+	.animated-text {
+		display: none;
+        font-family: 'Brush Script MT', cursive; 
+        font-size: 2rem;
+        color: white;
+        position: absolute;
+        top: 10%; 
+        left: 5%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+        border-right: 2px solid white; 
+        width: fit-content;
+        animation: typing 3.5s steps(50, end), blink 0.7s step-end infinite;
+    }
+
+    @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes blink {
+        from, to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: white;
+        }
+    }
+
+	@media (max-width: 850px) {
+		.left-upper-body {
+			display: none;
+		}
+
+		.right-upper-body {
+			width: 100%;
+		}
+
+		.animated-text{
+			display: flex;
+			
+		}
+	}
+
+	@media (max-width: 600px) {
+		.animated-text{
+			top: 8%;
+			left: 2%;
+			font-size: 1.5rem;
+		}
 	}
 
 	.brands {

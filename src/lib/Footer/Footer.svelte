@@ -28,7 +28,7 @@
 			</div>
 		</nav>
 
-		<div class="mini-contact">
+		<div class="mini-contact-pc">
 			<p
 				style="text-decoration: none; color: white; font-size: 21px;
             font-weight: 500; font-family: 'montserrat', sans-serif;"
@@ -49,6 +49,26 @@
 			</div>
 		</div>
 	</div>
+	<div class="mini-contact-mb">
+		<p
+			style="text-decoration: none; color: white; font-size: 21px;
+		font-weight: 500; font-family: 'montserrat', sans-serif;"
+		>
+			Contact Us
+		</p>
+		<div class="mini-contact-icon-body">
+			<div class="mini-contact-icon">
+				<img src="/mail.png" alt="Email" style="height:23.5px" />
+			</div>
+			<div class="mini-contact-text">
+				<p class="link_item" style="left:20px;">support@carsgo.com</p>
+			</div>
+		</div>
+		<div class="mini-contact-icon-body">
+			<img src="/phone.png" alt="Phone" style="height:40px" />
+			<p class="link_item" style="left:10px">+91-1234567890</p>
+		</div>
+	</div>
 	<div class="copyright">@2024 Copyright: CarsGo</div>
 </footer>
 
@@ -65,6 +85,12 @@
 		align-items: center;
 		justify-items: center;
 		margin-top: 20px;
+	}
+
+	@media (max-width: 1000px) {
+		.footer-main {
+			height: 300px;
+		}
 	}
 	.footer {
 		width: 100%;
@@ -97,7 +123,7 @@
 		padding: 0;
 	}
 
-	.mini-contact {
+	.mini-contact-pc {
 		width: 30%;
 		height: 100px;
 		justify-content: center;
@@ -105,6 +131,16 @@
 		display: flex;
 		flex-direction: column;
 		padding: 0;
+	}
+	.mini-contact-mb {
+
+		height: 100%;
+		justify-content: center;
+		align-items: center;
+		display: none;
+		flex-direction: column;
+		padding: 0;
+		margin-top: 40px;
 	}
 
 	.link_item {
@@ -117,6 +153,24 @@
 		color: white;
 		text-decoration: none;
 		cursor: pointer;
+	}
+
+	@media (max-width: 1000px) {
+		.image_in_footer {
+			width: 50%;
+		}
+
+		.quick_links_in_footer {
+			width: 50%;
+		}
+		.mini-contact-pc {
+			width: 0;
+			display: none;
+		}
+
+		.mini-contact-mb {
+			display: flex;
+		}
 	}
 
 	.copyright {
