@@ -31,7 +31,7 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + $user_Data.SessionToken
+				Authorization: 'Bearer ' + $user_Data.SessionToken
 			},
 			credentials: 'include'
 		});
@@ -43,25 +43,23 @@
 		updateExtendedUserData(user_data1.data);
 	}
 
-	let email1='';
-	let password1='';
-	let password2='';
-	let phone1='';
-	let name1='';
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (email1.length > 0 && email1.length < 50) {
-
 			if (emailRegex.test(email1)) {
 				return true;
-			}
-			else {
+			} else {
 				alert('Enter a valid email address!');
 				return false;
 			}
 		} else {
-			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			alert("Email Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -70,7 +68,7 @@
 		if (password1.length > 0 && password1.length < 50) {
 			return true;
 		} else {
-			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			alert("Password Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -85,7 +83,10 @@
 	}
 
 	function validate_phone() {
-		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
 			return true;
 		} else {
 			alert('Enter a valid phone number!');
@@ -97,13 +98,19 @@
 		if (name1.length > 0 && name1.length < 50) {
 			return true;
 		} else {
-			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			alert("Name Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
-	}	
+	}
 
 	function validationCheck() {
-		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone() &&
+			validate_name()
+		);
 	}
 
 	async function registration(event) {
@@ -116,7 +123,7 @@
 			name: name1
 		};
 
-		console.log("User Data: ", user);
+		console.log('User Data: ', user);
 
 		const formData = new FormData();
 		formData.append('email', user.email);
@@ -132,13 +139,12 @@
 
 		let parsedData = JSON.parse(res.data);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		if (parsedData[success]) {
-			alert("Registration successful!");
+			alert('Registration successful!');
 			registration_toggler = false;
-		}
-		else {
+		} else {
 			alert(message);
 		}
 	}
@@ -146,35 +152,6 @@
 	let cartItems = [];
 
 	$: $cart, (cartItems = $cart);
-
-	let cartitems = [
-		{
-			id: 1,
-			name: 'Maruti Suzuki Swift',
-			category: 'Hatchback',
-			price: 'Rs.600000',
-			img_url: '/car4.png',
-			quantity: 1,
-			get subtotal() {
-				let price = this.price.substring(3);
-				let quantity = this.quantity;
-				return price * quantity;
-			}
-		},
-		{
-			id: 2,
-			name: 'Maruti Suzuki Baleno',
-			category: 'Hatchback',
-			price: 'Rs.600000',
-			img_url: '/car4.png',
-			quantity: 2,
-			get subtotal() {
-				let price = this.price.substring(3);
-				let quantity = this.quantity;
-				return price * quantity;
-			}
-		}
-	];
 
 	let sum = 0;
 
@@ -235,7 +212,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -249,10 +226,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -267,7 +242,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -313,7 +288,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -361,7 +336,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -375,7 +350,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -451,7 +425,7 @@
 				{#each cartItems as item}
 					<div class="item">
 						<div class="product">
-							<img src={item.img_url} alt="Product" style="height: 100px; width: 100px;" />
+							<img src={item.img_url} alt="Product" class="product-img" />
 							<p class="product-text">{item.name}</p>
 						</div>
 
@@ -493,7 +467,7 @@
 
 		<div class="Total-cart">
 			<div class="total-price-holder">
-				<h1 class="cart-heading">Total</h1>
+				<h1 class="cart-heading" style="text-align: center;">Total</h1>
 				<h1 class="total-price">{sum}</h1>
 			</div>
 			<button
@@ -521,12 +495,14 @@
 		font-size: 30px;
 		font-weight: 700;
 		font-family: 'montserrat', sans-serif;
+		text-align: center;
 	}
 
 	.empty-cart-text {
 		font-size: 18px;
 		font-weight: 500;
 		font-family: 'montserrat', sans-serif;
+		text-align: center;
 	}
 
 	.btn-go-to-products {
@@ -568,8 +544,7 @@
 	.header {
 		display: flex;
 		flex-direction: row;
-		flex: 1;
-		width: 900px;
+		width: 100%;
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
@@ -583,13 +558,18 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		width: 900px;
+		width: 100%;
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
 		text-align: center;
 		border-color: #0aac71;
 		border-width: 1.5px;
+	}
+
+	.product-img {
+		height: 100px;
+		width: 100px;
 	}
 
 	.quantity-btn {
@@ -641,7 +621,7 @@
 		display: flex;
 		flex-direction: row;
 		flex: 1;
-		width: 900px;
+		width: 100%;
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
@@ -736,5 +716,568 @@
 		border-radius: 5px;
 		padding: 10px;
 		margin: 20px;
+	}
+
+	@media (min-width: 900px) and (max-width: 1300px) {
+		.cart {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.header {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			margin: 1.2rem 1.2rem 0px 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.items {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			width: 100%;
+			margin: 0rem 1.2rem 1.2rem 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.product-img {
+			height: 80px;
+			width: 80px;
+			margin-right: 0.75rem;
+		}
+
+		.quantity-btn {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			position: relative;
+			left: 20px;
+		}
+
+		.quantity-btn-inc {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 3px;
+			border-bottom-width: 1px;
+			border-bottom-color: #0aac71;
+		}
+
+		.quantity-btn-dec {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 5.5px;
+		}
+
+		.hitems {
+			width: 25%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+			border-right-width: 1.5px;
+		}
+
+		.hitems-text {
+			font-size: 15px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.item {
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.single-item {
+			display: flex;
+			flex-direction: row;
+			width: 25%;
+			height: 100%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+			border-right-width: 1.5px;
+			height: 100px;
+			position: relative;
+		}
+
+		.single-item-text {
+			font-size: 15px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: 38px;
+		}
+
+		.product {
+			height: 100px;
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 500px;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-right-width: 1.5px;
+		}
+
+		.product-text {
+			font-size: 15px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.Total-cart {
+			display: flex;
+			flex-direction: column;
+			flex: 0 0 auto;
+			width:100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+		}
+
+		.total-price-holder {
+			display: flex;
+			flex-direction: row;
+			flex: 0 0 auto;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			position: relative;
+			left: 20px;
+			top: 20px;
+			width: 100%;
+			margin: 0.55rem;
+		}
+
+		.total-price {
+			font-size: 25px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: -12px;
+		}
+
+		.checkout-btn {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			
+		}
+	}
+	@media (min-width: 600px) and (max-width: 900px) {
+		.cart {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.header {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			margin: 1.2rem 1.2rem 0px 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.items {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			width: 100%;
+			margin: 0rem 1.2rem 1.2rem 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.product-img {
+			height: 60px;
+			width: 60px;
+			margin-right: 0.75rem;
+		}
+
+		.quantity-btn {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			position: relative;
+			left: 20px;
+		}
+
+		.quantity-btn-inc {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 3px;
+			border-bottom-width: 1px;
+			border-bottom-color: #0aac71;
+		}
+
+		.quantity-btn-dec {
+			background-color: #002b1b;
+			color: white;
+			font-size: 18.5px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 5.5px;
+		}
+
+		.hitems {
+			width: 25%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+			border-right-width: 1.5px;
+		}
+
+		.hitems-text {
+			font-size: 15px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.item {
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.single-item {
+			display: flex;
+			flex-direction: row;
+			width: 25%;
+			height: 100%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+			border-right-width: 1.5px;
+			height: 100px;
+			position: relative;
+		}
+
+		.single-item-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: 38px;
+		}
+
+		.product {
+			height: 100px;
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 380px;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-right-width: 1.5px;
+		}
+
+		.product-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.Total-cart {
+			display: flex;
+			flex-direction: column;
+			flex: 0 0 auto;
+			width:100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+		}
+
+		.total-price-holder {
+			display: flex;
+			flex-direction: row;
+			flex: 0 0 auto;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			position: relative;
+			left: 20px;
+			top: 20px;
+			width: 100%;
+			margin: 0.55rem;
+		}
+
+		.total-price {
+			font-size: 25px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: -12px;
+		}
+
+		.checkout-btn {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			
+		}
+	}
+	@media (max-width: 600px) {
+		.cart {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.header {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			margin: 1.2rem 1.2rem 0px 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			border-width: 1.5px;
+		}
+
+		.items {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			width: 100%;
+			margin: 0rem 1.2rem 1.2rem 1.2rem;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+		}
+
+		.product-img {
+			height: 40px;
+			width: 40px;
+			margin-right: 0.45rem;
+		}
+
+		.quantity-btn {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			position: relative;
+			left: 10px;
+		}
+
+		.quantity-btn-inc {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 3px;
+			border-bottom-width: 1px;
+			border-bottom-color: #0aac71;
+		}
+
+		.quantity-btn-dec {
+			background-color: #002b1b;
+			color: white;
+			font-size: 18.5px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			padding: 5.5px;
+		}
+
+		.hitems {
+			width: 25%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+		}
+
+		.hitems-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.item {
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			border-color: #0aac71;
+			
+		}
+
+		.single-item {
+			display: flex;
+			flex-direction: row;
+			width: 25%;
+			height: 100%;
+			justify-content: center;
+			align-self: center;
+			justify-self: center;
+			height: 100px;
+			position: relative;
+		}
+
+		.single-item-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: 38px;
+		}
+
+		.product {
+			height: 100px;
+			display: flex;
+			flex-direction: row;
+			flex: 1;
+			width: 250px;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+		}
+
+		.product-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.Total-cart {
+			display: flex;
+			flex-direction: column;
+			flex: 0 0 auto;
+			width:100%;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+		}
+
+		.total-price-holder {
+			display: flex;
+			flex-direction: row;
+			flex: 0 0 auto;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			text-align: center;
+			position: relative;
+			left: 20px;
+			top: 20px;
+			width: 100%;
+			margin: 0.55rem;
+		}
+
+		.total-price {
+			font-size: 25px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			position: relative;
+			top: -12px;
+		}
+
+		.checkout-btn {
+			background-color: #002b1b;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			
+		}
 	}
 </style>

@@ -587,7 +587,8 @@
 		justify-content: center;
 		align-self: center;
 		align-items: center;
-		justify-items: center;		
+		justify-items: center;	
+		margin-left: 5rem;	
 	}
 
 	.category {
@@ -615,18 +616,18 @@
 		color: white;
 	}
 
-	@media (min-width: 550px) and (max-width: 690px) {
+	@media (min-width: 650px) and (max-width: 750px) {
 		.category {
 			margin-right: 80px;
 		}
 	}
-	@media (max-width: 550px) {
+	@media (max-width: 650px) {
 		.category {
 			margin-right: 50px;
 		}
 
 		.categories {
-			left: 18px;
+			left: 14px;
 			align-self: center;
 			margin-bottom: 2rem;
 		}

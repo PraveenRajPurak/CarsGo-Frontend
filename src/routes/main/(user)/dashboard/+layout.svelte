@@ -562,6 +562,7 @@
 		width: 65%;
 		height: 100%;
 		background-color: 'transparent';
+		margin-bottom: 100px;
 	}
 
 

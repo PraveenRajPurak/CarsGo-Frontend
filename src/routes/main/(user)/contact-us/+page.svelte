@@ -1,5 +1,5 @@
 <script>
-   import {
+	import {
 		isLoggedIn,
 		user_Data,
 		updateUserData,
@@ -28,7 +28,7 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + $user_Data.SessionToken
+				Authorization: 'Bearer ' + $user_Data.SessionToken
 			},
 			credentials: 'include'
 		});
@@ -40,25 +40,23 @@
 		updateExtendedUserData(user_data1.data);
 	}
 
-	let email1='';
-	let password1='';
-	let password2='';
-	let phone1='';
-	let name1='';
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (email1.length > 0 && email1.length < 50) {
-
 			if (emailRegex.test(email1)) {
 				return true;
-			}
-			else {
+			} else {
 				alert('Enter a valid email address!');
 				return false;
 			}
 		} else {
-			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			alert("Email Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -67,7 +65,7 @@
 		if (password1.length > 0 && password1.length < 50) {
 			return true;
 		} else {
-			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			alert("Password Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -82,7 +80,10 @@
 	}
 
 	function validate_phone() {
-		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
 			return true;
 		} else {
 			alert('Enter a valid phone number!');
@@ -94,13 +95,19 @@
 		if (name1.length > 0 && name1.length < 50) {
 			return true;
 		} else {
-			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			alert("Name Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
-	}	
+	}
 
 	function validationCheck() {
-		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone() &&
+			validate_name()
+		);
 	}
 
 	async function registration(event) {
@@ -113,7 +120,7 @@
 			name: name1
 		};
 
-		console.log("User Data: ", user);
+		console.log('User Data: ', user);
 
 		const formData = new FormData();
 		formData.append('email', user.email);
@@ -129,13 +136,12 @@
 
 		let parsedData = JSON.parse(res.data);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		if (parsedData[success]) {
-			alert("Registration successful!");
+			alert('Registration successful!');
 			registration_toggler = false;
-		}
-		else {
+		} else {
 			alert(message);
 		}
 	}
@@ -187,7 +193,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -201,10 +207,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -219,7 +223,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -265,7 +269,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -313,7 +317,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -327,7 +331,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -377,4 +380,75 @@
 		{/if}
 	{/if}
 </Modal>
-<h1>Contact Us</h1>
+<div class="contact-container">
+	<h1>Contact Us</h1>
+
+	<p>
+		We're here to help! Reach out to us through the following methods, and our team will get back to
+		you as soon as possible.
+	</p>
+
+	<div class="contact-info">
+		<div class="contact-item">
+			<strong>Email:</strong>
+			<a href="mailto:support@carsgo.com">support@carsgo.com</a>
+		</div>
+
+		<div class="contact-item">
+			<strong>Phone:</strong>
+			<a href="tel:+18001234567">+1 800 123 4567</a>
+		</div>
+
+		<div class="contact-item">
+			<strong>Address:</strong>
+			<p>123 CarsGo Street, Auto City, State, 12345</p>
+		</div>
+	</div>
+</div>
+
+<style>
+	.contact-container {
+		padding: 2rem;
+		max-width: 600px;
+		margin: 0 auto;
+		text-align: center;
+		color: white;
+	}
+
+	h1 {
+		margin-bottom: 1rem;
+        font-size: 2rem;
+        font-weight: bold;
+        color: aliceblue;
+	}
+
+	p {
+		margin-bottom: 1.5rem;
+		line-height: 1.6;
+        color: aliceblue;
+        font-size: 1.2rem;
+	}
+
+	.contact-info {
+		margin-top: 2rem;
+	}
+
+	.contact-item {
+		margin-bottom: 1rem;
+	}
+
+	.contact-item strong {
+		display: block;
+		font-weight: 500;
+		margin-bottom: 0.5rem;
+	}
+
+	.contact-item a {
+		color: #00aaff;
+		text-decoration: none;
+	}
+
+	.contact-item a:hover {
+		text-decoration: underline;
+	}
+</style>

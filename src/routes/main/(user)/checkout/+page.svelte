@@ -473,6 +473,7 @@
 			order_amount1 = parsedData[order_amount];
 			order_confirmed = true;
 			alert('Order placed successfully!');
+			$cart = [];
 		}
 	}
 </script>
@@ -523,7 +524,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -537,10 +538,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -555,7 +554,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -601,7 +600,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -649,7 +648,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -663,7 +662,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -714,7 +712,6 @@
 	{/if}
 </Modal>
 
-
 {#if order_confirmed}
 	<div class="order-confirmed">
 		<h1 class="playfair-display-order-confirmed-heading">Thanks for your order!</h1>
@@ -746,7 +743,7 @@
 		<button class="btn-go-to-products-version2" on:click={() => goto('/main/products')}
 			>Look for more beautiful cars...</button
 		>
-		<img src="/placed_order_car2.png" alt="Order Placed" style="height: 600px;" />
+		<img src="/placed_order_car2.png" alt="Order Placed" class="conf-img" />
 	</div>
 {:else if $cart.length < 1}
 	<div class="empty-cart-parent">
@@ -988,23 +985,21 @@
 				<div class="address-container">
 					{#if $isLoggedIn}
 						{#if $user_Extended_Data.addresses.length > 0}
-							<h1
-								class="address-heading"
-								style="position: relative; left: 100px; margin-top: 20px;"
-							>
-								Select a saved address
-							</h1>
+							<h1 class="address-heading" id="address-heading-select">Select a saved address</h1>
 
 							<select
 								bind:value={selectedAddress}
 								on:change={() => {
 									address = {};
-									//address_change_detected = true;
 								}}
-								style="background-color: transparent; margin-bottom: 1rem; color: white; width: 450px"
+								class="address-selector"
 							>
 								{#each $user_Extended_Data.addresses as address}
-									<option default={selectedAddress} value={address} style="color: black;"
+									<option
+										default={selectedAddress}
+										value={address}
+										class="address-opt"
+										style="color: black;"
 										>{#if address.addressfield != undefined}
 											{address.addressfield}
 										{:else}
@@ -1019,28 +1014,21 @@
 								{/each}
 							</select>
 
-							<h1
-								class="address-heading"
-								style="position: relative; left: 200px; margin-top: 20px;"
-							>
-								OR
-							</h1>
+							<h1 class="address-heading" id="address-heading-or">OR</h1>
 						{:else}
-							<h1 class="address-heading">We could not find any saved address</h1>
+							<h1 class="address-heading" id="address-heading">
+								We could not find any saved address
+							</h1>
 						{/if}
 					{/if}
-					<button class="add-address-btn" on:click={() => (add_address_toggler = true)}
-						>Add a new address</button
+					<button
+						class="add-address-btn"
+						on:click={() => (add_address_toggler = !add_address_toggler)}>Add a new address</button
 					>
 
 					{#if add_address_toggler}
 						<form>
-							<h1
-								class="address-heading"
-								style="position: relative; left: 100px; margin-top: 20px;"
-							>
-								Enter a new Address
-							</h1>
+							<h1 class="address-heading" id="address-heading-new">Enter a new Address</h1>
 							<div class="address-containers">
 								<label for="address.addressField" class="input-label">
 									Address Field :
@@ -1226,12 +1214,10 @@
 										address_conf_btn = true;
 										add_address(event);
 									}}
-									class="add-address-btn"
-									style="width: 25%;">Save Address</button
+									class="save-address-btn">Save Address</button
 								>
 								<button
-									class="add-address-btn"
-									style="width: 25%;"
+									class="save-address-btn"
 									on:click|preventDefault={() => {
 										address_field = '';
 										city = '';
@@ -1284,11 +1270,7 @@
 							}}>Confirm Address</button
 						>
 					</div>
-					<label
-						for="payment_method"
-						class="input-label"
-						style="margin-top: 20px; margin-left:20px;"
-					>
+					<label for="payment_method" class="input-label-payment" id="payment_method_label">
 						Payment Method
 						<select
 							class="input"
@@ -1301,8 +1283,8 @@
 							{/each}
 						</select>
 					</label>
-					<h1 style="color: white; font-size: 16px; position: relative; left: 170px;">
-						Amount : {sum}
+					<h1 class="final-amount">
+						Amount : Rs. {sum}
 					</h1>
 					<button
 						on:click={() => {
@@ -1312,12 +1294,12 @@
 						disabled={!allow_payment}>Confirm payment</button
 					>
 				</div>
-				<div class="items-container">
+				<div class={add_address_toggler ? 'items-container-2' : 'items-container'}>
 					<p class="total-text">Items</p>
 
 					{#each $cart as item}
 						<div class="item">
-							<img src={item.img_url} alt="Product" style="height: 100px; width: 100px;" />
+							<img src={item.img_url} alt="Product" class="product-image" />
 							<p class="item-text">{item.name}</p>
 							<p class="item-text">{item.price} X {item.quantity}</p>
 							<p class="item-text">{'Rs. ' + item.subtotal}</p>
@@ -1378,6 +1360,12 @@
 		margin-bottom: 20px;
 	}
 
+	#address-heading-or {
+		position: relative;
+		left: 200px;
+		margin-top: 20px;
+	}
+
 	.order-summary-container {
 		margin: 20px;
 		margin-bottom: 40px;
@@ -1425,6 +1413,16 @@
 		justify-items: center;
 	}
 
+	#address-heading-new {
+		position: relative;
+		left: 100px;
+		margin-top: 20px;
+	}
+
+	.address-opt {
+		color: black;
+	}
+
 	.btn-go-to-products-version2 {
 		border-color: #002b1b;
 		border-width: 0.5px;
@@ -1439,6 +1437,17 @@
 	.add-address-btn {
 		background-color: #002b1b;
 		width: 60%;
+		color: white;
+		font-size: 20px;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		border-radius: 5px;
+		padding: 10px;
+		margin: 20px;
+	}
+	.save-address-btn {
+		background-color: #002b1b;
+		width: 25%;
 		color: white;
 		font-size: 20px;
 		font-weight: 500;
@@ -1480,7 +1489,8 @@
 		align-items: center;
 		justify-items: center;
 		position: relative;
-		left: -110px;
+		left: -80px;
+		margin: 20px;
 	}
 
 	.confirmed-address-text {
@@ -1499,6 +1509,11 @@
 		border-radius: 5px;
 		padding: 10px;
 		margin: 20px;
+	}
+
+	#payment-method-label {
+		margin-top: 20px;
+		margin-left: 20px;
 	}
 
 	.checkout-container {
@@ -1522,9 +1537,28 @@
 		left: 60px;
 	}
 
+	.address-selector {
+		background-color: transparent;
+		margin-bottom: 1rem;
+		color: white;
+		width: 450px;
+	}
+
 	.items-container {
 		display: flex;
 		flex-direction: column;
+		position: sticky;
+		top: 0px;
+		justify-content: start;
+		align-items: center;
+		justify-items: center;
+		width: 40%;
+	}
+	.items-container-2 {
+		display: flex;
+		flex-direction: column;
+		position: sticky;
+		margin-top: -530px;
 		justify-content: start;
 		align-items: center;
 		justify-items: center;
@@ -1537,6 +1571,9 @@
 		font-weight: 700;
 		font-family: 'montserrat', sans-serif;
 		color: white;
+		position: relative;
+		left: 100px;
+		margin-top: 20px;
 	}
 
 	.input-label {
@@ -1547,6 +1584,19 @@
 		left: 10px;
 		margin-bottom: 30px;
 		color: white;
+	}
+
+	.input-label-payment {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		position: relative;
+		left: 10px;
+		margin-bottom: 30px;
+		color: white;
+	}
+	.conf-img {
+		height: 600px;
 	}
 
 	.input {
@@ -1595,6 +1645,18 @@
 		color: white;
 	}
 
+	.final-amount {
+		color: white;
+		font-size: 16px;
+		position: relative;
+		left: 170px;
+	}
+
+	.product-image {
+		height: 100px;
+		width: 100px;
+	}
+
 	.checkout-btn {
 		background-color: #002b1b;
 		color: white;
@@ -1617,5 +1679,312 @@
 		margin-top: 10px;
 		margin: 20px;
 		cursor: not-allowed;
+	}
+
+	@media (min-width: 950px) and (max-width: 1300px) {
+		.checkout-container {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			border-width: 1.5px;
+			border-color: #0aac71;
+			width: 100%;
+		}
+
+		.address-container {
+			display: flex;
+			flex-direction: column;
+			width: 50%;
+			justify-content: start;
+			align-self: center;
+		}
+
+		.address-selector {
+			background-color: transparent;
+			margin-bottom: 1rem;
+			color: white;
+			width: 60%;
+		}
+
+		.items-container {
+			position: sticky;
+			top: 0px;
+			display: flex;
+			flex-direction: column;
+			justify-content: start;
+			align-items: center;
+			justify-items: center;
+			width: 50%;
+		}
+		.items-container-2 {
+			position: sticky;
+			top: 0px;
+			display: flex;
+			flex-direction: column;
+			justify-content: start;
+			align-items: center;
+			justify-items: center;
+			width: 50%;
+		}
+
+		.address-heading {
+			margin-bottom: 20px;
+			font-size: 20px;
+			font-weight: 700;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+			margin-top: 20px;
+			text-align: center;
+		}
+
+		.address-opt {
+			width: 200px;
+		}
+
+		#address-heading-select {
+			position: relative;
+			left: -60px;
+		}
+
+		#address-heading-or {
+			position: relative;
+			left: -60px;
+		}
+		#address-heading-new {
+			position: relative;
+			left: -60px;
+		}
+
+		.product-image {
+			height: 80px;
+			width: 80px;
+		}
+
+		.input-label {
+			display: flex;
+			flex-direction: row;
+			justify-content: start;
+			margin-bottom: 30px;
+			color: white;
+		}
+
+		.item {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			margin-bottom: 10px;
+			color: white;
+		}
+
+		.item-text {
+			font-size: 12px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			margin-top: 10px;
+			margin: 7px;
+			color: white;
+		}
+
+		.playfair-display-order-confirmed-heading {
+			font-size: 40px;
+			font-family: 'Playfair Display', serif;
+			font-optical-sizing: auto;
+			font-weight: 700;
+			font-style: normal;
+			color: white;
+			margin-bottom: 0px 20px 20px 20px;
+			text-align: center;
+		}
+
+		.order-confirmed-text {
+			font-size: 20px;
+			font-family: 'Montserrat', sans-serif;
+			font-optical-sizing: auto;
+			font-weight: 300;
+			font-style: normal;
+			color: white;
+			margin-bottom: 20px;
+		}
+
+		.total-text {
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			margin-top: 10px;
+			margin: 20px;
+			color: white;
+		}
+
+		.save-address-btn {
+			background-color: #002b1b;
+			width: 25%;
+			color: white;
+			font-size: 20px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			margin: 20px;
+		}
+
+		.confirmed-address {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			align-self: center;
+			margin-left: 140px;
+			margin-right: 30px;
+		}
+
+		.confirmed-address-text {
+			font-size: 15px;
+			font-weight: 400;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.conf-img {
+			width: 100%;
+		}
+	}
+
+	@media (max-width: 950px) {
+		.checkout-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			border-width: 1.5px;
+			border-color: #0aac71;
+			width: 100%;
+		}
+
+		.address-container {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			justify-content: center;
+			align-self: center;
+			align-items: center;
+			position: relative;
+			left: 0px;
+		}
+
+		#address-heading-select {
+			position: relative;
+			left: 0px;
+		}
+
+		#address-heading-or {
+			position: relative;
+			left: 0px;
+		}
+		#address-heading-new {
+			position: relative;
+			left: 0px;
+			text-align: center;
+		}
+
+		.items-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: start;
+			align-items: center;
+			justify-items: center;
+			width: 100%;
+
+			margin-top: 20px;
+		}
+
+		.items-container-2 {
+			display: flex;
+			flex-direction: column;
+			justify-content: start;
+			align-items: center;
+			justify-items: center;
+			width: 100%;
+			margin-top: 20px;
+		}
+
+		.input-label-payment {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			margin: 1.2rem 0rem 1.2rem 0rem;
+			color: white;
+			position: relative;
+
+			left: -100px;
+		}
+
+		#payment-method-label {
+			position: relative;
+			left: 0px;
+			text-align: center;
+			margin-left: 0px;
+		}
+
+		#payment-method {
+			position: relative;
+			left: 0px;
+			text-align: center;
+			margin-left: 0px;
+		}
+
+		.address-selector {
+			width: 80%;
+		}
+
+		.final-amount {
+			color: white;
+			font-size: 22px;
+			font-weight: 500;
+			position: relative;
+			left: 0px;
+		}
+
+		.save-address-btn {
+			background-color: #002b1b;
+			width: 100%;
+			color: white;
+			font-size: 15px;
+			font-weight: 500;
+			font-family: 'montserrat', sans-serif;
+			border-radius: 5px;
+			padding: 10px;
+			margin: 20px 50px 20px 0;
+		}
+
+		.confirmed-address {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+			align-self: center;
+			margin-left: 190px;
+		}
+
+		.confirmed-address-text {
+			font-size: 15px;
+			font-weight: 400;
+			font-family: 'montserrat', sans-serif;
+			color: white;
+		}
+
+		.conf-img {
+			width: 100%;
+		}
 	}
 </style>

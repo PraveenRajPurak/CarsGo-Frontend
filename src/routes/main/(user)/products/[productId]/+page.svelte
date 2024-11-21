@@ -21,6 +21,8 @@
 	import { register_login_popup } from '../../../../../stores/user.js';
 	import { cart, addToCart } from '../../../../../stores/cart.js';
 	import { products_store } from '../../../../../stores/products.js';
+
+	import { Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 	const { productId } = $page.params;
 
 	console.log('Product Id : ', productId);
@@ -33,10 +35,6 @@
 		products_from_store = $products_store;
 		console.log('Products from store:', products_from_store);
 	}
-
-	//console.log('Products from store : ', products_from_store);
-
-	//console.log('Products , actual : ', $products_store);
 
 	let index_in_cart = -1;
 
@@ -56,7 +54,7 @@
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + $user_Data.SessionToken
+				Authorization: 'Bearer ' + $user_Data.SessionToken
 			},
 			credentials: 'include'
 		});
@@ -68,25 +66,23 @@
 		updateExtendedUserData(user_data1.data);
 	}
 
-	let email1='';
-	let password1='';
-	let password2='';
-	let phone1='';
-	let name1='';
+	let email1 = '';
+	let password1 = '';
+	let password2 = '';
+	let phone1 = '';
+	let name1 = '';
 
 	function validate_email() {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (email1.length > 0 && email1.length < 50) {
-
 			if (emailRegex.test(email1)) {
 				return true;
-			}
-			else {
+			} else {
 				alert('Enter a valid email address!');
 				return false;
 			}
 		} else {
-			alert('Email Field can\'t be empty and should be less than 50 characters!');
+			alert("Email Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -95,7 +91,7 @@
 		if (password1.length > 0 && password1.length < 50) {
 			return true;
 		} else {
-			alert('Password Field can\'t be empty and should be less than 50 characters!');
+			alert("Password Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
 	}
@@ -110,7 +106,10 @@
 	}
 
 	function validate_phone() {
-		if (phone1.length == 10 && (phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)) {
+		if (
+			phone1.length == 10 &&
+			(phone1[0] == 9 || phone1[0] == 8 || phone1[0] == 7 || phone1[0] == 6)
+		) {
 			return true;
 		} else {
 			alert('Enter a valid phone number!');
@@ -122,13 +121,19 @@
 		if (name1.length > 0 && name1.length < 50) {
 			return true;
 		} else {
-			alert('Name Field can\'t be empty and should be less than 50 characters!');
+			alert("Name Field can't be empty and should be less than 50 characters!");
 			return false;
 		}
-	}	
+	}
 
 	function validationCheck() {
-		return validate_email() && validate_password() && confirm_password() && validate_phone() && validate_name();
+		return (
+			validate_email() &&
+			validate_password() &&
+			confirm_password() &&
+			validate_phone() &&
+			validate_name()
+		);
 	}
 
 	async function registration(event) {
@@ -141,7 +146,7 @@
 			name: name1
 		};
 
-		console.log("User Data: ", user);
+		console.log('User Data: ', user);
 
 		const formData = new FormData();
 		formData.append('email', user.email);
@@ -157,13 +162,12 @@
 
 		let parsedData = JSON.parse(res.data);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		if (parsedData[success]) {
-			alert("Registration successful!");
+			alert('Registration successful!');
 			registration_toggler = false;
-		}
-		else {
+		} else {
 			alert(message);
 		}
 	}
@@ -207,7 +211,7 @@
 		}
 	];
 
-	let index = $products_store.findIndex((p) => p._id == productId );
+	let index = $products_store.findIndex((p) => p._id == productId);
 
 	console.log('Index of the item : ', index);
 
@@ -312,7 +316,7 @@
 								<div>
 									<label
 										for="email"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your email</label
 									>
 									<input
@@ -326,10 +330,8 @@
 									/>
 								</div>
 								<div>
-									<label
-										for="name"
-										class="block mb-2 text-sm font-medium"										
-										style="color: aliceblue;">Your name</label
+									<label for="name" class="block mb-2 text-sm font-medium" style="color: aliceblue;"
+										>Your name</label
 									>
 									<input
 										type="name"
@@ -344,7 +346,7 @@
 								<div>
 									<label
 										for="phone"
-										class="block mb-2 text-sm font-medium"										
+										class="block mb-2 text-sm font-medium"
 										style="color: aliceblue;">Your phone</label
 									>
 									<input
@@ -390,7 +392,7 @@
 									/>
 								</div>
 								<button
-									on:click={()=>{
+									on:click={() => {
 										registration(event);
 									}}
 									type="submit"
@@ -438,7 +440,7 @@
 									console.log('ID:', parsedData[id]);
 									console.log('Name:', parsedData[name]);
 									console.log('Session Token:', parsedData[session_token]);
-									
+
 									if (parsedData[success]) {
 										loggedinsucces = true;
 										loginmessage = 'Successfully logged in!';
@@ -452,7 +454,6 @@
 										});
 
 										await get_user_data();
-
 									} else {
 										loginmessage = res.error;
 										loggedinsucces = false;
@@ -505,20 +506,26 @@
 
 <div class="product-page">
 	<div class="product-route">
-		<p class="product-route-text">carsgo.com/home/products/{products_from_store[index].name}</p>
+		<Breadcrumb aria-label="Default breadcrumb example">
+			<BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+			<BreadcrumbItem href="/main/products">Products</BreadcrumbItem>
+			<BreadcrumbItem>{products_from_store[index].name}</BreadcrumbItem>
+		</Breadcrumb>
 	</div>
 	<div class="product-card">
 		<div class="product-image">
-			<img
-				src={products_from_store[index].images[0]}
-				alt="Product"
-				style="height: 450px; width: 450px"
-			/>
+			<img src={products_from_store[index].images[0]} alt="Product" class="product-image-main" />
 		</div>
 		<div class="product-info">
 			<h1 class="product-name">{products_from_store[index].name}</h1>
 			<p class="product-category">{products_from_store[index].category}</p>
-			<p class="product-price">Rs. {products_from_store[index].saleprice}</p>
+			<div class="price-ctn">
+				<p class="product-price" style="color:#3C3D37">
+					<s>Rs. {products_from_store[index].regularprice}</s>
+				</p>
+				<p class="product-price">Rs. {products_from_store[index].saleprice}</p>
+			</div>
+
 			{#if index_in_cart == -1}
 				{console.log('Product does not exist in cart')}
 				{console.log($cart)}
@@ -541,18 +548,44 @@
 	</div>
 	<div class="product-description">
 		<p class="description-heading">Product Description</p>
-		<p class="description-text">{products_from_store[index].description}</p>
-	</div>
-	<h1 class="product-heading">Featured Products</h1>
-	<div class="featured-products">
-		{#each featured_product as fp}
-			<div class="featured-product">
-				<img src={fp.img_url} alt="Product" style="height: 200px; width: 200px" />
-				<p class="featured-product-name">{fp.name}</p>
-				<p class="featured-product-category">{fp.category}</p>
-				<p class="featured-product-price">{fp.price}</p>
+		<div class="key-specifications">
+			<div class="spec">
+				<strong>Dimension:</strong>
+				<span>{products_from_store[index].description.dimension.length} X {products_from_store[index].description.dimension.width} X {products_from_store[index].description.dimension.height}</span>
 			</div>
-		{/each}
+			<div class="spec">
+				<strong>Engine:</strong>
+				<span>{products_from_store[index].description.engine}</span>
+			</div>
+			<div class="spec">
+				<strong>Fuel Type:</strong>
+				<span>{products_from_store[index].description.fueltype}</span>
+			</div>
+			<div class="spec">
+				<strong>Mileage:</strong>
+				<span>{products_from_store[index].description.mileage}</span>
+			</div>
+			<div class="spec">
+				<strong>Seating Capacity:</strong>
+				<span>{products_from_store[index].description.seatingcapacity}</span>
+			</div>
+			<div class="spec">
+				<strong>Power:</strong>
+				<span>{products_from_store[index].description.poweroutput}</span>
+			</div>
+			<div class="spec">
+				<strong>Top Speed:</strong>
+				<span>{products_from_store[index].description.topspeed}</span>
+			</div>
+			<div class="spec">
+				<strong>Tyre:</strong>
+				<span>{products_from_store[index].description.tyre}</span>
+			</div>
+			<div class="spec">
+				<strong>Weight:</strong>
+				<span>{products_from_store[index].description.weight}</span>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -563,26 +596,18 @@
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
-		margin: 50px;
+		margin: 2rem 5rem 3rem 5rem;
 	}
 
 	.product-route {
 		display: flex;
 		color: '#002b1b';
-		text-align: left;
-	}
-
-	.product-route-text {
-		color: white;
-		font-size: 20px;
-		font-family: 'montserrat', sans-serif;
-		position: relative;
-		top: -20px;
-		left: -300px;
+		align-self: flex-start;
+		margin: 0rem 0rem 1.5rem 6rem;
 	}
 
 	.product-card {
-		width: 80%;
+		width: 100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -595,8 +620,14 @@
 		justify-content: center;
 		align-items: center;
 		justify-items: center;
-		border-color: '#002b1b';
-		border-width: 1px;
+		border-color: #002b1b;
+		border-width: 0.5px;
+		box-shadow: #002b1b 0px 0px 10px 0px;
+	}
+
+	.product-image-main {
+		height: 28rem;
+		width: 28rem;
 	}
 
 	.product-info {
@@ -614,8 +645,6 @@
 		font-family: 'montserrat', sans-serif;
 		color: white;
 		margin: 20px;
-		position: relative;
-		left: 40px;
 	}
 
 	.product-price {
@@ -624,8 +653,6 @@
 		font-family: 'montserrat', sans-serif;
 		color: white;
 		margin: 20px;
-		position: relative;
-		left: 40px;
 	}
 
 	.product-category {
@@ -634,8 +661,14 @@
 		font-family: 'montserrat', sans-serif;
 		color: white;
 		margin: 20px;
-		position: relative;
-		left: 40px;
+	}
+
+	.price-ctn {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		justify-items: center;
 	}
 
 	.add-to-cart {
@@ -685,60 +718,173 @@
 		padding: 10px;
 		margin-top: 10px;
 		margin: 20px;
-		position: relative;
-		left: 40px;
 	}
 
-	.featured-products {
+	@media (min-width: 850px) and (max-width: 1300px) {
+		.product-route {
+			margin: 0rem 0rem 3rem 3rem;
+		}
+		.product-page {
+			margin: 2rem 2rem 3rem 2rem;
+		}
+
+		.product-image {
+			width: 50%;
+		}
+
+		.product-info {
+			width: 50%;
+		}
+
+		.product-name {
+			font-size: 30px;
+		}
+
+		.product-price {
+			font-size: 20px;
+			margin: 10px 10px 10px 30px;
+		}
+
+		.product-category {
+			font-size: 20px;
+			margin: 10px 10px 10px 30px;
+		}
+	}
+
+	@media (min-width: 700px) and (max-width: 850px) {
+		.product-route {
+			margin: 0rem 0rem 3rem 3rem;
+		}
+		.product-page {
+			margin: 2rem 2rem 3rem 2rem;
+		}
+
+		.product-image {
+			width: 50%;
+		}
+
+		.product-info {
+			width: 50%;
+		}
+
+		.product-name {
+			font-size: 25px;
+		}
+
+		.product-price {
+			font-size: 20px;
+			margin: 10px 10px 10px 30px;
+		}
+
+		.product-category {
+			font-size: 20px;
+			margin: 10px 10px 10px 30px;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.product-page {
+			margin: 2rem 2rem 3rem 2rem;
+		}
+		.product-card {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.product-image {
+			width: 100%;
+			height: auto;
+		}
+
+		.product-info {
+			width: 100%;
+		}
+
+		.product-route {
+			margin: 0rem 0rem 3rem 3rem;
+		}
+
+		.product-image-main {
+			height: 24rem;
+			width: 24rem;
+			aspect-ratio: 1/1;
+		}
+
+		.product-name {
+			font-size: 25px;
+		}
+
+		.product-price {
+			font-size: 15px;
+			margin: 10px 10px 10px 30px;
+		}
+
+		.product-category {
+			font-size: 15px;
+			margin: 10px 10px 10px 30px;
+		}
+	}
+
+	.description-heading {
+		color: aliceblue;
+		font-weight: 500;
+		font-family: 'montserrat', sans-serif;
+		font-size: 30px;
+		text-align: center;
+		margin-top: 50px;
+	}
+
+	.key-specifications {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 6rem;
-		justify-items: center;
-		align-items: center;
-		justify-content: center;
+		gap: 1rem;
+		grid-template-columns: repeat(3, 1fr); 
+		margin: 2rem 0;
+		padding: 1rem;
+		background-color: transparent; 
+		border: 0.75px solid #002b1b;
+		border-radius: 8px;
+		font-family: 'Montserrat', sans-serif;
+		
 	}
 
-	.featured-product {
-		padding: 30px;
+	.spec {
+		padding: 1rem;
+		border: 0.55px solid #002b1b;
+		border-radius: 4px;
 		display: flex;
 		flex-direction: column;
+		align-items: flex-start;
 		justify-content: center;
+		font-family: 'Montserrat', sans-serif;
+		font-size: 16px;
 		align-items: center;
-		justify-items: center;
-		margin-bottom: 20px;
-		border-color: #002b1b;
-		border-width: 2px;
 	}
 
-	.featured-product-name {
-		margin-top: 10px;
-		font-size: 20px;
-		font-weight: 500;
-		font-family: 'montserrat', sans-serif;
+	.spec strong {
 		color: white;
+		font-weight: 600;
+		text-align: center;
+
 	}
 
-	.featured-product-price {
-		margin-top: 10px;
-		font-size: 20px;
-		font-weight: 500;
-		font-family: 'montserrat', sans-serif;
-		color: white;
+	.spec span {
+		color: whitesmoke;
+		text-align: center;
+
 	}
 
-	.featured-product-category {
-		margin-top: 10px;
-		font-size: 20px;
-		font-weight: 500;
-		font-family: 'montserrat', sans-serif;
-		color: white;
+	@media (max-width: 700px) {
+		.key-specifications {
+			grid-template-columns: repeat(2, 1fr); 
+		}
 	}
 
-	.product-heading {
-		margin-bottom: 20px;
-		font-size: 30px;
-		font-weight: 700;
-		font-family: 'montserrat', sans-serif;
-		color: white;
+	@media (max-width: 490px) {
+		.key-specifications {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

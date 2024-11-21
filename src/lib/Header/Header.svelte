@@ -104,10 +104,14 @@
 
 	.hamburger_menu {
 		display: none;
-		background-color: #333;
+		background-color: #002b1b;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		padding: 10px;
 		border-radius: 4px;
+		position: absolute;
+		top: 50px;
+		left: 10px;
+		z-index: 1;
 	}
 
 	.hamburger_menu .menu_item {
