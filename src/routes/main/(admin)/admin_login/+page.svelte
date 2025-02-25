@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 
-	import { isAdminLoggedIn, admin_Data, updateAdminData } from '../../../../stores/admin.js';
+	import { isAdminLoggedIn, admin_Data, updateAdminData, updateAdminLoggedIn } from '../../../../stores/admin.js';
 
 	let loggedinsucces = false;
 	let loginmessage = '';
@@ -62,11 +62,14 @@
 									Name: parsedData[name],
 									SessionToken: parsedData[session_token]
 								});
+								updateAdminLoggedIn(true);
 								alert('Successfully logged in! Going to dashboard...');
-								goto('/main/admin/admin_dashboard');
+								goto('/main/admin/');
 							} else {
 								loginmessage = res.error;
 								loggedinsucces = false;
+								updateAdminLoggedIn(false);
+								alert(res.error);
 							}
 						}}
 					>
