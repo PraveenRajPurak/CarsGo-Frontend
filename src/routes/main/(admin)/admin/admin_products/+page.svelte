@@ -43,6 +43,7 @@
 		font-weight: 700;
 		font-family: 'montserrat', sans-serif;
 		margin-bottom: 30px;
+		margin-top: 20px;
 	}
 
 	.product {
