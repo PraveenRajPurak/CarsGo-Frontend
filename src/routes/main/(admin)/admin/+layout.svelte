@@ -211,6 +211,9 @@
 		height: 100%;
 		background-color: #003521;
 		padding: 10px;
+		justify-content: center;
+		align-items: center;
+		justify-items: center;
 	}
 
 	.right-panel-header {
