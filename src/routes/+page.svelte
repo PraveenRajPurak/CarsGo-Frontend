@@ -208,22 +208,24 @@
 
 	let formData = {
 		primary_usage: 'City Commute',
-		fuel_type: 'Petrol',
-		seating_capacity: 4,
-		budget: '₹5L–₹8L',
+		fuel_type: 'No preference',
+		seating_capacity: '5',
+		budget: 'Medium',
 		performance: 'Medium',
 		mileage_priority: 'Medium',
-		body_type: 'Sedan',
+		body_type: 'SUV',
 		speed_priority: 'Medium',
 		brand_preference: 'Flexible',
-		brand_name_input: 'Honda'
+		brand_name_input: ''
 	};
 
 	const primaryUsageOptions = ['City Commute', 'Highway', 'Luxury/Status'];
-	const fuelTypeOptions = ['Diesel', 'Petrol', 'No preference', 'Electric'];
-	const seatingCapacityOptions = [4, 5, 6, 7];
-	const priorityOptions = ['Low', 'Medium', 'High'];
+	const fuelTypeOptions = ['No preference', 'Petrol', 'Diesel', 'Hybrid', 'Electric'];
+	const seatingCapacityOptions = ['4', '5', '6', '7'];
+	const mileagePriorityOptions = ['Low', 'Medium', 'High'];
+	const performanceOptions = ['Low', 'Medium', 'High'];
 	const bodyTypeOptions = ['Sedan', 'Hatchback', 'SUV'];
+	const speedPriorityOptions = ['Low', 'Medium', 'High'];
 	const brandPreferenceOptions = ['Strict', 'Flexible'];
 	const brandOptions = [
 		'Tata',
@@ -236,11 +238,11 @@
 		'Renault'
 	];
 	const budgetRanges = [
-		{ value: '₹5L–₹8L', label: '₹5L–₹8L' },
-		{ value: '₹8L–₹12L', label: '₹8L–₹12L' },
-		{ value: '₹12L–₹16L', label: '₹12L–₹16L' },
-		{ value: '₹16L–₹22L', label: '₹16L–₹22L' },
-		{ value: '₹22L–₹28L', label: '₹22L–₹28L' }
+		{ value: 'Very Low', label: '₹5L–₹8L' },
+		{ value: 'Low', label: '₹8L–₹12L' },
+		{ value: 'Medium', label: '₹12L–₹16L' },
+		{ value: 'High', label: '₹16L–₹22L' },
+		{ value: 'Very High', label: '₹22L–₹28L' }
 	];
 
 	let recommendations = null;
@@ -260,7 +262,7 @@
 		try {
 			console.log('Sending form data:', formData);
 
-			const response = await fetch('http://localhost:8000/recommend', {
+			const response = await fetch('http://localhost:5000/predict', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -268,17 +270,26 @@
 				body: JSON.stringify(formData)
 			});
 
+			const data = await response.json();
+
+			console.log('Received data:', data);
+
+			
 			if (!response.ok) {
 				const errorData = await response.json().catch(() => ({}));
 				console.error('Error response:', errorData);
 				throw new Error(errorData.detail || 'Failed to get recommendations');
 			}
 
-			recommendations = await response.json();
+			if (data.recommended_cars.length === 0) {
+				setError('No cars match your criteria. Try adjusting your preferences.');
+			}
+
+			recommendations = data.recommended_cars
 			console.log('Received recommendations:', recommendations);
 
 			// Find products by their IDs
-			recommended_cars_set = recommendations.recommended_cars
+			recommended_cars_set = recommendations
 				.map((id) => products_from_store.find((product) => String(product._id) === id))
 				.filter((product) => product);
 
@@ -587,7 +598,7 @@
 				Find Your <Span gradient>Perfect Car</Span>.
 			</Heading>
 		</div>
-	
+
 		<form on:submit|preventDefault={handleSubmit}>
 			<div class="form-group">
 				<label class="input-label" for="primary_usage">Primary Usage:</label>
@@ -597,7 +608,7 @@
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="fuel_type">Fuel Type:</label>
 				<select class="form-selector" bind:value={formData.fuel_type}>
@@ -606,7 +617,7 @@
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="seating_capacity">Seating Capacity:</label>
 				<select class="form-selector" bind:value={formData.seating_capacity}>
@@ -615,7 +626,7 @@
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="budget">Budget Range:</label>
 				<select class="form-selector" bind:value={formData.budget}>
@@ -624,25 +635,25 @@
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="performance">Performance Priority:</label>
 				<select class="form-selector" bind:value={formData.performance}>
-					{#each priorityOptions as option}
+					{#each performanceOptions as option}
 						<option class="form-opt" value={option}>{option}</option>
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="mileage_priority">Mileage Priority:</label>
 				<select class="form-selector" bind:value={formData.mileage_priority}>
-					{#each priorityOptions as option}
+					{#each mileagePriorityOptions as option}
 						<option class="form-opt" value={option}>{option}</option>
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="body_type">Body Type:</label>
 				<select class="form-selector" bind:value={formData.body_type}>
@@ -651,16 +662,16 @@
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="speed_priority">Speed Priority:</label>
 				<select class="form-selector" bind:value={formData.speed_priority}>
-					{#each priorityOptions as option}
+					{#each speedPriorityOptions as option}
 						<option class="form-opt" value={option}>{option}</option>
 					{/each}
 				</select>
 			</div>
-	
+
 			<div class="form-group">
 				<label class="input-label" for="brand_preference">Brand Preference:</label>
 				<select class="form-selector" bind:value={formData.brand_preference}>
@@ -669,7 +680,8 @@
 					{/each}
 				</select>
 			</div>
-	
+
+			{#if formData.brand_preference === 'Strict'}
 			<div class="form-group">
 				<label class="input-label" for="brand_name_input">Preferred Brand:</label>
 				<select class="form-selector" id="brand_name_input" bind:value={formData.brand_name_input}>
@@ -678,18 +690,19 @@
 					{/each}
 				</select>
 			</div>
-	
+			{/if}
+
 			<button class="submit-btn" type="submit" disabled={loading}>
 				{loading ? 'Getting Recommendations...' : 'Find My Perfect Car'}
 			</button>
 		</form>
-	
+
 		{#if error}
 			<div class="error">
 				{error}
 			</div>
 		{/if}
-	
+
 		{#if recommendations}
 			<div class="recommendations">
 				<div

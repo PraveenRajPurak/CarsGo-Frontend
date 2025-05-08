@@ -123,7 +123,6 @@
 
 	function validate_regular_price() {
 		if (regular_price) {
-
 			regular_price_valid = true;
 		} else {
 			regular_price_valid = false;
@@ -414,7 +413,6 @@
 		formData.append('session_token', sessionToken);
 		formData.append('in_stock', product.in_stock);
 
-
 		if (imageFile) {
 			formData.append('image', imageFile);
 		}
@@ -433,7 +431,7 @@
 
 		console.log('Parsed data: ', parsedData);
 
-		const { success, message} = parsedData[0];
+		const { success, message } = parsedData[0];
 
 		console.log('Order Success:', parsedData[success]);
 		console.log('Message:', parsedData[message]);
@@ -709,7 +707,14 @@
 				<div class="new-product-containers">
 					<label for="image" class="input-label">
 						Upload Image:
-						<input class="input" type="file" on:change={handleImage} name="image" bind:value={image} accept="image/*" />
+						<input
+							class="input"
+							type="file"
+							on:change={handleImage}
+							name="image"
+							bind:value={image}
+							accept="image/*"
+						/>
 					</label>
 				</div>
 			</form>
@@ -731,14 +736,27 @@
 			<p class="product-text">Category: {product.category}</p>
 			<p class="product-text">Regular Price: {product.regularprice}</p>
 			<p class="product-text">Sale Price: {product.saleprice}</p>
-			<button
+			{#if product.reviews}
+				{#each product.reviews as review,index}
+				<p class="product-text">Review {index+1}</p>
+					<p class="product-text">Review Text: {review.review}</p>
+					<p class="product-text">Rating: {review.rating}</p>
+				{/each}
+				<p class="product-text">Overall Rating: {product.overall_rating}</p>
+				{#if product.summarized_review}
+					<p class="product-text">Summarized Review: {product.summarized_review}</p>
+				{/if}
+			{/if}
+			<!--  -->
+
+			<!-- <button
 				on:click={() => {
 					goto('admin_products/' + product._id);
 				}}
 				type="button"
 				class="modify-btn text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
 				>Modify this product</button
-			>
+			> -->
 		</div>
 	{/each}
 </div>
@@ -790,7 +808,7 @@
 		margin-bottom: 5px;
 	}
 
-	.modify-btn {
+	/* .modify-btn {
 		background-color: #4caf50;
 		color: white;
 		border: none;
@@ -801,7 +819,7 @@
 		font-size: 16px;
 		margin-top: 10px;
 		cursor: pointer;
-	}
+	} */
 
 	.product-name {
 		color: white;
